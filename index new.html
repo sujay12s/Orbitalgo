@@ -1,0 +1,3086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Orbit Algo - Institutional-grade algorithmic trading platform with AI-driven strategies and MT5 broker integration.">
+    <title>Orbit Algo - Institutional-Grade Algorithmic Trading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00d4ff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+            font-size: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Toggle Button */
+        .toggle-button {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-button:hover {
+            color: #00d4ff;
+            transform: scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 8rem 2rem 4rem;
+            background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2.5rem;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d4ff;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(10deg) scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .popular-tag {
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            background: linear-gradient(45deg, #ffd700, #ffb700);
+            color: #0f0f1a;
+            padding: 0.5rem 1.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            transform: rotate(5deg);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .pricing-card .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card .per-year {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card .per-month {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-card ul li {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .pricing-card ul li i {
+            color: #00d4ff;
+        }
+
+        .pricing-card .btn-primary {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(90, 103, 216, 0.1));
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 40px;
+            height: 40px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        /* Currency Symbols */
+        .currency-symbol {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 1.5rem;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            user-select: none;
+            z-index: 1;
+            animation: float 15s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .currency-symbol.visible {
+            opacity: 0.4;
+        }
+
+        .currency-symbol:hover {
+            opacity: 0.8;
+            color: #00d4ff;
+            transform: scale(1.5);
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(90, 103, 216, 0.1));
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+
+        .stats-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* About Us Section */
+        .about-us {
+            padding: 6rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .about-us h2 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-us p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Customer Reviews Section */
+        .reviews-section {
+            padding: 4rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative; /* Needed for absolute positioning of arrows */
+        }
+
+        .reviews-wrapper {
+            position: relative;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .reviews-container {
+            display: flex; /* Changed to flex for horizontal scrolling */
+            overflow-x: scroll; /* Enable horizontal scrolling */
+            scroll-snap-type: x mandatory; /* Snap to cards */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+            gap: 2rem; /* Consistent spacing between cards */
+            padding-bottom: 1rem; /* Space for potential scrollbar or just padding */
+            margin: 0 -2rem; /* Offset padding from reviews-wrapper to make cards reach edges */
+            padding: 0 2rem; /* Internal padding */
+        }
+
+        .reviews-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+
+        .review-card {
+            flex: 0 0 380px; /* Do not grow, do not shrink, fixed width */
+            min-width: 380px; /* Explicit min-width for consistent sizing */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: auto; /* Allow height to adjust based on content */
+            scroll-snap-align: start; /* Snap point for each card */
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .review-card p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            font-style: italic;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Limit to 4 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+        }
+
+        .review-card .reviewer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .review-card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .review-card .location {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .review-card .country-flag {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .review-card .stars {
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #00d4ff;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .scroll-button:hover {
+            background: #00d4ff;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .scroll-button.left {
+            left: 0rem;
+        }
+
+        .scroll-button.right {
+            right: 0rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: radial-gradient(ellipse at center, rgba(90, 103, 216, 0.2) 0%, transparent 70%);
+        }
+
+        .cta-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Security Badges */
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.7rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .security-badge i {
+            color: #00d4ff;
+        }
+        
+        /* Map Section */
+        .map-section {
+            padding: 4rem 2rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .map-container {
+            max-width: 1300px;
+            margin: 2rem auto 0;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .map-embed {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            height: 100%;
+        }
+        
+        .map-embed iframe {
+            width: 100%;
+            height: 450px;
+            border: 0;
+        }
+        
+        .map-info {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .map-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #00d4ff;
+        }
+        
+        .map-info p {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .map-info i {
+            color: #00d4ff;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(15, 15, 26, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .footer-column h3 {
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-left: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #00d4ff;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .social-links a {
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: white;
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .modal-content input {
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        .modal-content button[type="submit"] {
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            color: white;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .thank-you-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            color: #ffffff;
+            z-index: 2001;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* Review Modal Specific Styles */
+        .star-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .star-rating .stars {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .star-rating .stars i {
+            color: #ffd700;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star-rating .stars i:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            min-height: 100px;
+            margin-bottom: 1rem;
+            resize: vertical;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal-content textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        /* Live Charts Section (Single BTC Chart) */
+        .single-chart-section {
+            padding: 4rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto 4rem;
+        }
+
+        .single-chart-container {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            width: 800px;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+        }
+
+        .chart-header {
+            padding: 1.2rem;
+            background: linear-gradient(90deg, #00d4ff, #5a67d8);
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .chart-header .symbol-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .chart-content {
+            height: calc(100% - 70px);
+            position: relative;
+        }
+
+        .chart-timeframe {
+            display: flex;
+            background: rgba(30, 41, 59, 0.5);
+            padding: 0.5rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .timeframe-btn {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 0.3rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeframe-btn:hover, .timeframe-btn.active {
+            background: #00d4ff;
+            color: white;
+            border-color: #00d4ff;
+        }
+
+        /* Bot Section */
+        .bot-section {
+            padding: 6rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .bot-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .bot-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bot-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .bot-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bot-card h3 i {
+            color: #00d4ff;
+        }
+
+        .bot-card .price-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .bot-card ul {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .bot-card ul li {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .bot-card ul li i {
+            color: #00d4ff;
+            margin-top: 4px;
+        }
+
+        /* How it Works */
+        .how-it-works {
+            padding: 6rem 2rem;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 4rem auto 0;
+        }
+
+        .step-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #00d4ff, #5a67d8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-card h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            color: #ffffff;
+        }
+
+        .step-card p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Education Modals */
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 1rem;
+            text-align: left;
+        }
+        
+        .modal-body h3 {
+            margin-top: 1.5rem;
+            color: #00d4ff;
+            font-size: 1.3rem;
+        }
+        
+        .modal-body h4 {
+            margin: 1rem 0 0.5rem;
+            color: #ffffff;
+        }
+        
+        .modal-body ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .pattern {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .pattern:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .faq-item h3 {
+            color: #00d4ff;
+        }
+        
+        .faq-item p {
+            margin-top: 0.5rem;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        /* Risk Warning Section */
+        .risk-warning {
+            padding: 1.5rem 2rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-top: 1px solid rgba(255, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .risk-warning-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .risk-warning strong {
+            color: #ff5252;
+        }
+        
+        /* Disclaimer Modal */
+        .modal-body ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Enhanced styles for policy modals */
+        .policy-modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 850px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.7;
+        }
+        
+        .policy-modal-content h2 {
+            color: #00d4ff;
+            margin-bottom: 1.8rem;
+            text-align: center;
+            font-size: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+        
+        .policy-modal-content h3 {
+            color: #ffffff;
+            margin: 2rem 0 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .policy-modal-content h4 {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 1.5rem 0 0.8rem;
+            font-size: 1.15rem;
+        }
+        
+        .policy-modal-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.2rem;
+        }
+        
+        .policy-modal-content ul {
+            margin: 1rem 0 1.5rem;
+            padding-left: 1.8rem;
+        }
+        
+        .policy-modal-content li {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.7rem;
+            position: relative;
+        }
+        
+        .policy-modal-content li:before {
+            content: "•";
+            color: #00d4ff;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .policy-modal-content .highlight {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 3px solid #00d4ff;
+        }
+        
+        .policy-modal-content .last-updated {
+            text-align: right;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 2.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .policy-modal-content .contact-info {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .section-header p {
+                font-size: 1.1rem;
+            }
+            
+            .single-chart-container {
+                width: 100%;
+            }
+            .map-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .toggle-button {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background: rgba(15, 15, 26, 0.98);
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                gap: 1.5rem;
+                clip-path: circle(0px at 90% -10%);
+                -webkit-clip-path: circle(0px at 90% -10%);
+                transition: all 0.5s ease-out;
+                pointer-events: none;
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links.active {
+                clip-path: circle(1000px at 90% -10%);
+                -webkit-clip-path: circle(1000px at 90% -10%);
+                pointer-events: all;
+            }
+
+            .nav-links li {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease 0.1s;
+            }
+
+            .nav-links.active li {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Add transition delays for all 6 navigation items */
+            .nav-links li:nth-child(1) { transition-delay: 0.1s; }
+            .nav-links li:nth-child(2) { transition-delay: 0.2s; }
+            .nav-links li:nth-child(3) { transition-delay: 0.3s; }
+            .nav-links li:nth-child(4) { transition-delay: 0.4s; }
+            .nav-links li:nth-child(5) { transition-delay: 0.5s; }
+            .nav-links li:nth-child(6) { transition-delay: 0.6s; }
+
+            .cta-button {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .hero { 
+                padding: 6rem 1rem 3rem; 
+                min-height: 90vh;
+            }
+            .hero h1 { 
+                font-size: 2.5rem; 
+                margin-bottom: 1rem;
+            }
+            .hero p { 
+                font-size: 1.1rem; 
+                margin-bottom: 2rem;
+            }
+            .hero-buttons { 
+                flex-direction: column; 
+                align-items: center;
+                gap: 1rem;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                padding: 1rem;
+            }
+            
+            .features-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .pricing-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .stats-container { 
+                grid-template-columns: 1fr; 
+            }
+            .footer-content { 
+                grid-template-columns: 1fr; 
+                text-align: center; 
+                gap: 2rem;
+            }
+            .footer-links { 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+            }
+            .social-links { 
+                justify-content: center; 
+            }
+            
+            .reviews-section {
+                padding: 4rem 1rem;
+            }
+
+            .reviews-container {
+                padding: 0 1rem;
+                margin: 0 -1rem;
+            }
+
+            .review-card {
+                flex: 0 0 90%;
+                min-width: 90%;
+                max-width: 400px;
+                padding: 1.5rem;
+            }
+
+            .scroll-button.left {
+                left: 0.5rem;
+            }
+
+            .scroll-button.right {
+                right: 0.5rem;
+            }
+            
+            .about-us { 
+                padding: 4rem 1rem; 
+            }
+            .about-us h2 { 
+                font-size: 2rem; 
+            }
+            .about-us p { 
+                font-size: 1rem; 
+            }
+            .bot-cards { 
+                grid-template-columns: 1fr; 
+            }
+            .steps-container { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+            
+            .section-header p {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card, .pricing-card, .bot-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+            }
+            
+            .policy-modal-content {
+                padding: 1.5rem;
+            }
+            .map-container {
+                grid-template-columns: 1fr;
+            }
+            .map-info {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .feature-card h3, .pricing-card h3, .bot-card h3 {
+                font-size: 1.4rem;
+            }
+            
+            .security-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .security-badge {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .bot-card .price-tag {
+                top: 15px;
+                right: 15px;
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .chart-header {
+                font-size: 1.2rem;
+                padding: 0.8rem;
+            }
+            
+            .timeframe-btn {
+                padding: 0.2rem 0.6rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Interactive elements */
+        .pulse { animation: pulse 2s infinite; }
+
+        /* Tooltip */
+        .tooltip { position: relative; display: inline-block; }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: rgba(15, 15, 26, 0.95);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00d4ff" />
+                            <stop offset="100%" stop-color="#5a67d8" />
+                        </linearGradient>
+                        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur stdDeviation="5" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#logoGradient)" stroke-width="8" stroke-dasharray="5,5" />
+                    <path d="M30,50 A20,20 0 1,1 70,50 A20,20 0 1,1 30,50" fill="none" stroke="url(#logoGradient)" stroke-width="8" />
+                    <circle cx="50" cy="30" r="5" fill="url(#logoGradient)" filter="url(#glow)" />
+                    <circle cx="50" cy="70" r="5" fill="url(#logoGradient)" filter="url(#glow)" />
+                    <path d="M50,30 L50,70 M30,50 L70,50" stroke="url(#logoGradient)" stroke-width="4" stroke-linecap="round" />
+                </svg>
+                <span style="background: linear-gradient(45deg, #00d4ff, #5a67d8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Orbit Algo</span>
+            </div>
+            <button class="toggle-button" id="toggle-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#bots">Bots</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#about">About Us</a></li>
+            </ul>
+            <a href="#" class="cta-button" id="get-started-btn">Get Started</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        
+        <div class="hero-content">
+            <h1>Institutional-Grade Algorithmic Trading</h1>
+            <p>Unlock hedge-fund level trading strategies with AI-driven algorithms, seamlessly integrated with MT5 brokers.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary pulse" id="start-trial-btn">Start Free Trial</a>
+                <a href="#pricing" class="btn-secondary">View Pricing</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="trial-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-trial-modal">×</button>
+            <h2>Start Your Free Trial</h2>
+            <form id="trial-form">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="tel" name="mobile" placeholder="Mobile Number" required>
+                <input type="text" name="mt5-id" placeholder="MT5 Credential ID" required>
+                <input type="password" name="mt5-password" placeholder="MT5 Password" required>
+                <input type="text" name="mt5-server" placeholder="MT5 Server" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="get-started-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-get-started-modal">×</button>
+            <h2>Get Started</h2>
+            <form id="get-started-form">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="tel" name="mobile" placeholder="Mobile Number" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="review-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-review-modal">×</button>
+            <h2>Write a Review</h2>
+            <form id="review-form">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="text" name="location" placeholder="Your Location (City, Country)" required>
+                <div class="star-rating">
+                    <span>Your Rating:</span>
+                    <div class="stars">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" name="rating" id="rating-value" required>
+                </div>
+                <textarea name="review" placeholder="Your review (max 200 characters)" maxlength="200" required></textarea>
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="thank-you-message" id="thank-you-message">
+        <p>Thank you! Our team will contact you soon.</p>
+        <button class="btn-primary" id="close-thank-you">OK</button>
+    </div>
+
+    <div class="thank-you-message" id="review-thank-you">
+        <p>Thank you for your valuable feedback!</p>
+        <button class="btn-primary" id="close-review-thank-you">OK</button>
+    </div>
+
+    <div class="modal" id="beginners-guide-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-beginners-modal">×</button>
+            <h2>Beginner's Guide to Trading</h2>
+            <div class="modal-body">
+                <h3>What is Trading?</h3>
+                <p>Trading involves buying and selling financial instruments (like stocks, forex, or cryptocurrencies) with the goal of making a profit from price movements.</p>
+                
+                <h3>Basic Concepts:</h3>
+                <ul>
+                    <li><strong>Market:</strong> Where buyers and sellers exchange assets</li>
+                    <li><strong>Bid/Ask:</strong> The price buyers will pay (bid) vs. what sellers want (ask)</li>
+                    <li><strong>Spread:</strong> Difference between bid and ask prices</li>
+                    <li><strong>Liquidity:</strong> How easily an asset can be bought/sold</li>
+                    <li><strong>Volatility:</strong> How much prices fluctuate over time</li>
+                </ul>
+                
+                <h3>Algorithmic Trading Basics:</h3>
+                <p>Algorithmic trading uses computer programs to execute trades based on predefined rules and strategies. Benefits include:</p>
+                <ul>
+                    <li>Removes emotional decision making</li>
+                    <li>Executes trades at optimal speeds</li>
+                    <li>Can analyze multiple markets simultaneously</li>
+                    <li>Backtests strategies using historical data</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="strategy-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-strategy-modal">×</button>
+            <h2>Chart Pattern Strategies</h2>
+            <div class="modal-body">
+                <h3>Common Chart Patterns:</h3>
+                
+                <div class="pattern">
+                    <h4>1. Head and Shoulders</h4>
+                    <p>A reversal pattern that signals a potential trend change. Features three peaks - the middle one (head) is highest, flanked by two lower peaks (shoulders).</p>
+                    <p><strong>Strategy:</strong> Enter short position when price breaks below the "neckline" with stop-loss above the right shoulder.</p>
+                </div>
+                
+                <div class="pattern">
+                    <h4>2. Double Top/Bottom</h4>
+                    <p>Double Top (bearish reversal) has two peaks at similar highs. Double Bottom (bullish reversal) has two troughs at similar lows.</p>
+                    <p><strong>Strategy:</strong> For Double Top, sell when price breaks below the support level between peaks. For Double Bottom, buy when price breaks above resistance.</p>
+                </div>
+                
+                <div class="pattern">
+                    <h4>3. Triangles (Ascending, Descending, Symmetrical)</h4>
+                    <p>Consolidation patterns where price makes lower highs and higher lows (symmetrical), just lower highs (descending), or just higher lows (ascending).</p>
+                    <p><strong>Strategy:</strong> Trade the breakout in direction of the prevailing trend with stop-loss on the other side of the triangle.</p>
+                </div>
+                
+                <div class="pattern">
+                    <h4>4. Flags and Pennants</h4>
+                    <p>Short-term continuation patterns after strong moves. Flags are small parallelograms, pennants are small symmetrical triangles.</p>
+                    <p><strong>Strategy:</strong> Enter in direction of original trend when price breaks out of pattern, targeting move equal to initial "flagpole".</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="tutorial-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-tutorial-modal">×</button>
+            <h2>Forex Trading Tutorials</h2>
+            <div class="modal-body">
+                <h3>Beginner's Forex Trading Course</h3>
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/hQs6AYpYxWE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <p>This comprehensive beginner's guide covers forex market basics, terminology, and how to place your first trade.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="faq-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-faq-modal">×</button>
+            <h2>Frequently Asked Questions</h2>
+            <div class="modal-body">
+                <div class="faq-item">
+                    <h3>Q: How much money do I need to start algorithmic trading?</h3>
+                    <p>A: While you can start with as little as $100, we recommend at least $1,000 to properly implement risk management strategies.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Q: Do I need programming skills to use Orbit Algo?</h3>
+                    <p>A: No, our platform provides pre-built strategies with customizable parameters. Advanced users can access our API for custom development.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Q: How much time does algorithmic trading require?</h3>
+                    <p>A: After initial setup, the algorithms work autonomously. We recommend checking performance weekly and adjusting strategies monthly.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Q: What's the success rate of your algorithms?</h3>
+                    <p>A: Our strategies have an average 85% success rate, but past performance doesn't guarantee future results. Proper risk management is essential.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Q: Can I use Orbit Algo with any broker?</h3>
+                    <p>A: Our platform integrates with most MT5 brokers. We recommend checking our list of verified brokers for optimal performance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="single-chart" class="single-chart-section">
+        <div class="section-header">
+            <h2>Live Chart</h2>
+            <p>Real-time market data visualization</p>
+        </div>
+        <div class="single-chart-container">
+            <div class="chart-header">
+                <div class="symbol-info">
+                    <i class="fab fa-bitcoin"></i>
+                    <span>Live Chart</span>
+                </div>
+            </div>
+            <div class="chart-timeframe">
+                <button class="timeframe-btn active">1H</button>
+                <button class="timeframe-btn">4H</button>
+                <button class="timeframe-btn">1D</button>
+                <button class="timeframe-btn">1W</button>
+                <button class="timeframe-btn">1M</button>
+            </div>
+            <div class="chart-content" id="btcusd-chart"></div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Advanced Trading Features</h2>
+            <p>Powerful tools designed for professional traders</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3>AI-Powered Algorithms</h3>
+                <p>Adaptive machine learning strategies that optimize trades in real-time based on market conditions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Low-Latency Execution</h3>
+                <p>Execute orders in under 1ms to capitalize on market opportunities instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                <h3>Real-Time Analytics</h3>
+                <p>Visualize market trends with advanced charting and performance tracking tools.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>Robust Risk Management</h3>
+                <p>Protect your portfolio with automated risk controls and stop-loss mechanisms.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Cross-Platform Trading</h3>
+                <p>Access your account on web, mobile, or MT5 desktop with seamless synchronization.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-cogs"></i></div>
+                <h3>Customizable Strategies</h3>
+                <p>Create and backtest personalized trading strategies with our API and builder tools.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>99.9%</h3>
+                <p>Uptime Reliability</p>
+            </div>
+            <div class="stat-item">
+                <h3>1.2M+</h3>
+                <p>Trades Executed</p>
+            </div>
+            <div class="stat-item">
+                <h3>0.8ms</h3>
+                <p>Average Execution</p>
+            </div>
+            <div class="stat-item">
+                <h3>42%</h3>
+                <p>Average Annual Returns</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Pricing Plans</h2>
+            <p>Choose the perfect plan for your trading needs</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Basic</h3>
+                <div class="price">$249</div>
+                <div class="per-year">per year</div>
+                <div class="per-month">($20.75/month)</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Forex Currency Pairs Bot</li>
+                    <li><i class="fas fa-check"></i> AI-Driven Strategies</li>
+                    <li><i class="fas fa-check"></i> MT5 Integration</li>
+                    <li><i class="fas fa-check"></i> Basic Support</li>
+                    <li><i class="fas fa-check"></i> 3-Day Free Trial</li>
+                </ul>
+                <a href="#" class="btn-primary" id="basic-trial-btn">Select Plan</a>
+            </div>
+            <div class="pricing-card">
+                <div class="popular-tag">MOST POPULAR</div>
+                <h3>Gold</h3>
+                <div class="price">$469</div>
+                <div class="per-year">per year</div>
+                <div class="per-month">($39.08/month)</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> XAUUSD & Currency Pairs Bot</li>
+                    <li><i class="fas fa-check"></i> Advanced AI Algorithms</li>
+                    <li><i class="fas fa-check"></i> MT5 Integration</li>
+                    <li><i class="fas fa-check"></i> Priority Support</li>
+                    <li><i class="fas fa-check"></i> 3-Day Free Trial</li>
+                </ul>
+                <a href="#" class="btn-primary" id="gold-trial-btn">Select Plan</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Premium</h3>
+                <div class="price">$689</div>
+                <div class="per-year">per year</div>
+                <div class="per-month">($57.42/month)</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> BTC, XAUUSD & All Pairs Bot</li>
+                    <li><i class="fas fa-check"></i> Full AI Strategy Suite</li>
+                    <li><i class="fas fa-check"></i> MT5 Integration</li>
+                    <li><i class="fas fa-check"></i> 24/7 VIP Support</li>
+                    <li><i class="fas fa-check"></i> 3-Day Free Trial</li>
+                </ul>
+                <a href="#" class="btn-primary" id="premium-trial-btn">Select Plan</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="bot-section" id="bots">
+        <div class="section-header">
+            <h2>Our Trading Bots</h2>
+            <p>Specialized algorithmic solutions for different market instruments</p>
+        </div>
+        <div class="bot-cards">
+            <div class="bot-card">
+                <div class="price-tag">$249/year</div>
+                <h3><i class="fas fa-globe-americas"></i> Forex Bot</h3>
+                <p>Specialized in major currency pairs with advanced trend analysis and pattern recognition.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> EUR/USD, GBP/USD, USD/JPY</li>
+                    <li><i class="fas fa-check-circle"></i> Trend-following strategies</li>
+                    <li><i class="fas fa-check-circle"></i> MACD & Bollinger Bands indicators</li>
+                    <li><i class="fas fa-check-circle"></i> Pattern recognition engine</li>
+                    <li><i class="fas fa-check-circle"></i> Risk management protocols</li>
+                </ul>
+                <a href="#" class="btn-primary" id="forex-trial-btn">Start Free Trial</a>
+            </div>
+            <div class="bot-card">
+                <div class="price-tag">$469/year</div>
+                <h3><i class="fas fa-coins"></i> Gold & Forex Bot</h3>
+                <p>Combines currency pairs with precious metals trading for diversified portfolio.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> XAU/USD (Gold) trading</li>
+                    <li><i class="fas fa-check-circle"></i> All major currency pairs</li>
+                    <li><i class="fas fa-check-circle"></i> RSI & Stochastic oscillators</li>
+                    <li><i class="fas fa-check-circle"></i> Price action analysis</li>
+                    <li><i class="fas fa-check-circle"></i> Volatility-based strategies</li>
+                </ul>
+                <a href="#" class="btn-primary" id="gold-forex-trial-btn">Start Free Trial</a>
+            </div>
+            <div class="bot-card">
+                <div class="price-tag">$689/year</div>
+                <h3><i class="fas fa-chart-line"></i> All Markets Bot</h3>
+                <p>Comprehensive solution for forex, metals, cryptocurrencies and indices.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> BTC/USD cryptocurrency</li>
+                    <li><i class="fas fa-check-circle"></i> XAU/USD (Gold) trading</li>
+                    <li><i class="fas fa-check-circle"></i> All major currency pairs</li>
+                    <li><i class="fas fa-check-circle"></i> Multi-timeframe analysis</li>
+                    <li><i class="fas fa-check-circle"></i> Machine learning optimization</li>
+                </ul>
+                <a href="#" class="btn-primary" id="all-markets-trial-btn">Start Free Trial</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="education">
+        <div class="section-header">
+            <h2>Education</h2>
+            <p>Learn the basics of algorithmic trading and advanced strategies.</p>
+        </div>
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <i class="fas fa-book-reader fa-3x" style="color: #00d4ff;"></i>
+                <h4>Beginner's Guide</h4>
+                <p>Start your journey with fundamental concepts of algo trading.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <i class="fas fa-graduation-cap fa-3x" style="color: #00d4ff;"></i>
+                <h4>Strategy Deep Dive</h4>
+                <p>Explore various trading strategies and how to apply them.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <i class="fas fa-chalkboard-teacher fa-3x" style="color: #00d4ff;"></i>
+                <h4>Video Tutorials</h4>
+                <p>Watch step-by-step guides on setting up and optimizing bots.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <i class="fas fa-question-circle fa-3x" style="color: #00d4ff;"></i>
+                <h4>FAQ & Support</h4>
+                <p>Find answers to common questions and get expert assistance.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-us" id="about">
+        <div class="section-header">
+            <h2>About Us</h2>
+            <p>Discover the legacy and expertise behind Orbit Algo's global trading solutions.</p>
+        </div>
+        <p>Orbit Algo is a globally recognized leader in algorithmic trading, operating internationally across diverse financial markets. With over a decade of experience, our cutting-edge AI-driven platform has consistently delivered a success ratio exceeding 85%, empowering traders worldwide to achieve institutional-grade performance with unparalleled reliability and innovation.</p>
+    </section>
+
+    <section class="reviews-section">
+        <div class="section-header">
+            <h2>Customer Reviews</h2>
+            <p>Hear from traders worldwide who have transformed their portfolios with Orbit Algo.</p>
+        </div>
+        <div class="reviews-wrapper">
+            <button class="scroll-button left" id="scroll-left"><i class="fas fa-chevron-left"></i></button>
+            <div class="reviews-container" id="reviews-container">
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"Orbit Algo offers an average experience. While the AI algorithms are promising, the initial setup required more effort than anticipated."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇮🇳</div>
+                        <div>
+                            <h4>Rajiv Sharma</h4>
+                            <div class="location">Mumbai, India</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"I'm satisfied with the platform's performance, especially the low-latency execution. Further improvements in the UI/UX would enhance the overall trading experience."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇺🇸</div>
+                        <div>
+                            <h4>Michael Anderson</h4>
+                            <div class="location">New York, USA</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"The platform's features are functional, but I've experienced occasional inconsistencies. With some refinements, Orbit Algo has the potential to be a strong contender in the market."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇸🇬</div>
+                        <div>
+                            <h4>Sophia Tan</h4>
+                            <div class="location">Singapore</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"The educational resources helped me understand algorithmic trading from scratch. Now, I'm trading like a pro."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇮🇳</div>
+                        <div>
+                            <h4>Priya Patel</h4>
+                            <div class="location">Ahmedabad, India</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"The cross-platform compatibility allows me to monitor my trades anywhere, anytime. Truly a game-changer."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇬🇧</div>
+                        <div>
+                            <h4>David Wilson</h4>
+                            <div class="location">London, UK</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"Orbit Algo's customer support is exceptional. They guided me through setup and strategy optimization seamlessly."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇦🇪</div>
+                        <div>
+                            <h4>Aisha Khan</h4>
+                            <div class="location">Dubai, UAE</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"The Gold & Forex bot has consistently delivered 25% monthly returns for my portfolio. Worth every penny!"</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇮🇳</div>
+                        <div>
+                            <h4>Vikram Singh</h4>
+                            <div class="location">Bangalore, India</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"As a fund manager, I appreciate the institutional-grade tools. Orbit Algo has become essential to our trading desk."</p>
+                    <div class="reviewer">
+                        <div class="country-flag">🇩🇪</div>
+                        <div>
+                            <h4>Thomas Müller</h4>
+                            <div class="location">Frankfurt, Germany</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div class="stars" style="margin-bottom: 1rem;">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <h4 style="font-size: 1.5rem; margin-bottom: 1rem; color: #00d4ff;">Share Your Experience</h4>
+                    <p style="font-style: normal; -webkit-line-clamp: unset; overflow: visible; text-overflow: unset; margin-bottom: 1.5rem;">We value your feedback! Click below to write a review and help us improve.</p>
+                    <a href="#" class="btn-primary" id="write-review-btn" style="padding: 0.8rem 1.5rem; font-size: 0.9rem; text-decoration: none;">Write a Review</a>
+                </div>
+            </div>
+            <button class="scroll-button right" id="scroll-right"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="cta-content">
+            <h2>Elevate Your Trading Today</h2>
+            <p>Join thousands of traders leveraging Orbit Algo's AI-driven platform and MT5 integration for unparalleled performance.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary" id="cta-trial-btn">Start Free Trial</a>
+                <a href="#pricing" class="btn-secondary">Explore Pricing</a>
+            </div>
+            <div class="security-badges">
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>256-bit Encryption</span>
+                </div>
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Two-Factor Auth</span>
+                </div>
+                <div class="security-badge">
+                    <i class="fas fa-user-shield"></i>
+                    <span>SOC 2 Certified</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="risk-warning">
+        <div class="risk-warning-content">
+            <p><strong>Risk Warning:</strong> Trading in financial markets involves substantial risk of loss and is not suitable for all investors. Past performance is not indicative of future results. Orbit Algo provides algorithmic trading tools for educational purposes only and does not guarantee profits or specific results. Users should carefully consider their investment objectives and risk tolerance before trading.</p>
+        </div>
+    </section>
+    
+   <!-- In the map-section div, replace the existing address with: -->
+<section class="map-section">
+    <div class="section-header">
+        <h2>Our Offices</h2>
+    </div>
+    <div class="map-container">
+        <div class="map-embed" style="height: 300px;">  <!-- Reduced from 450px -->
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.263318090673!2d78.38197231526842!3d17.44795998804487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93dc8b5b0a33%3A0x8896b1a6ce348f6c!2sHITEC%20City%2C%20Madhapur%2C%20Hyderabad%2C%20Telangana%20500081!5e0!3m2!1sen!2sin!4v1718368000000!5m2!1sen!2sin&markers=color:red%7C17.44796,78.38416" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="map-info">
+            <h3>Indian Office</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Unit 702, Building No. 1B<br>Mindspace Madhapur – HUDA Techno Enclave<br>HITEC City, Hyderabad – 500081<br>Telangana, India</p>
+            
+            <h3 style="margin-top: 2rem;">US {Headquarter}</h3>
+            <p><i class="fas fa-map-marker-alt"></i> 1455 3rd Street<br>San Francisco, CA 94158<br>USA</p>
+            
+        
+            <p><i class="fas fa-envelope"></i> contact@orbitalgo.co</p>
+            <p><i class="fas fa-clock"></i> Monday - Friday: 9:00 AM - 6:00 PM</p>
+        </div>
+    </div>
+</section>
+</section>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Product</h3>
+                <ul class="footer-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#bots">Trading Bots</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#" id="privacy-policy-link">Privacy Policy</a></li>
+                    <li><a href="#" id="terms-link">Terms of Service</a></li>
+                    <li><a href="#" id="disclaimer-link">Risk Disclosure</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2015-2025 Orbit Algo. All rights reserved. | Advanced Algorithmic Trading Platform</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: rgba(255, 255, 255, 0.4);">
+                Orbit Algo is an educational tool only. Trading involves risk of loss.
+            </p>
+        </div>
+    </footer>
+
+    <div class="modal" id="privacy-policy-modal">
+        <div class="policy-modal-content">
+            <button class="close-modal" id="close-privacy-modal">×</button>
+            <h2>Privacy Policy</h2>
+            <p class="last-updated">Last Updated: January 1, 2025</p>
+            
+            <div class="highlight">
+                <p>This Privacy Policy explains how Orbit Algo ("we", "us", or "our") collects, uses, discloses, and safeguards your information when you use our algorithmic trading platform and related services.</p>
+            </div>
+            
+            <h3>1. Information We Collect</h3>
+            <h4>1.1 Personal Information</h4>
+            <p>When you register for an account or use our services, we may collect:</p>
+            <ul>
+                <li>Full name, email address, phone number, and contact details</li>
+                <li>Payment and billing information for subscription services</li>
+                <li>Government-issued identification for verification purposes when required</li>
+                <li>Demographic information such as age, gender, and occupation for analytics</li>
+            </ul>
+            
+            <h4>1.2 Technical Data</h4>
+            <p>We automatically collect certain technical information including:</p>
+            <ul>
+                <li>IP address, browser type, and device characteristics</li>
+                <li>Operating system and software versions</li>
+                <li>Usage data including pages visited, features used, and time spent</li>
+                <li>Crash reports and performance metrics</li>
+                <li>Cookies and similar tracking technologies (see Section 4)</li>
+            </ul>
+            
+            <h4>1.3 Trading Data</h4>
+            <p>To provide our services, we may process:</p>
+            <ul>
+                <li>MT5 account credentials (stored securely and encrypted)</li>
+                <li>Trading history, positions, and account balances</li>
+                <li>Market data and strategy performance metrics</li>
+                <li>Algorithm configuration and optimization parameters</li>
+            </ul>
+            
+            <h3>2. How We Use Your Information</h3>
+            <p>We use the collected information for the following purposes:</p>
+            <ul>
+                <li><strong>Service Delivery:</strong> To create and manage your account, process payments, and provide customer support</li>
+                <li><strong>Platform Improvement:</strong> To analyze usage patterns and enhance our services</li>
+                <li><strong>Security:</strong> To detect and prevent fraud, abuse, and security incidents</li>
+                <li><strong>Communication:</strong> To send service-related notices, updates, and promotional offers (you may opt-out)</li>
+                <li><strong>Legal Compliance:</strong> To meet regulatory requirements and respond to legal requests</li>
+                <li><strong>Research & Development:</strong> To develop new features and improve algorithm performance</li>
+            </ul>
+            
+            <h3>3. Data Sharing and Disclosure</h3>
+            <h4>3.1 Service Providers</h4>
+            <p>We may share information with third-party vendors who assist with:</p>
+            <ul>
+                <li>Payment processing (Stripe, PayPal)</li>
+                <li>Cloud hosting and infrastructure (AWS, Google Cloud)</li>
+                <li>Analytics and monitoring tools (Google Analytics, Sentry)</li>
+                <li>Customer support and communication platforms (Zendesk, Intercom)</li>
+            </ul>
+            
+            <h4>3.2 Legal Requirements</h4>
+            <p>We may disclose information when required by law or to:</p>
+            <ul>
+                <li>Comply with legal processes or governmental requests</li>
+                <li>Protect our rights, property, or safety</li>
+                <li>Investigate potential violations of our Terms of Service</li>
+                <li>Prevent or address fraud, security, or technical issues</li>
+            </ul>
+            
+            <h4>3.3 Business Transfers</h4>
+            <p>In the event of a merger, acquisition, or asset sale, your information may be transferred as part of the transaction.</p>
+            
+            <h3>4. Cookies and Tracking Technologies</h3>
+            <p>We use cookies and similar technologies to:</p>
+            <ul>
+                <li>Authenticate users and maintain sessions</li>
+                <li>Remember preferences and settings</li>
+                <li>Analyze traffic and usage patterns</li>
+                <li>Deliver targeted advertisements (through third-party services)</li>
+            </ul>
+            <p>You can control cookies through your browser settings, but disabling them may affect functionality.</p>
+            
+            <h3>5. Data Security</h3>
+            <p>We implement robust security measures including:</p>
+            <ul>
+                <li>End-to-end encryption for all data transmissions (TLS 1.2+)</li>
+                <li>Secure storage with AES-256 encryption for sensitive data</li>
+                <li>Regular security audits and penetration testing</li>
+                <li>Multi-factor authentication for administrative access</li>
+                <li>Employee training on data protection best practices</li>
+            </ul>
+            <p>Despite these measures, no system is 100% secure, and we cannot guarantee absolute security.</p>
+            
+            <h3>6. International Data Transfers</h3>
+            <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for these transfers.</p>
+            
+            <h3>7. Your Rights</h3>
+            <p>Depending on your jurisdiction, you may have the right to:</p>
+            <ul>
+                <li>Access and receive a copy of your personal data</li>
+                <li>Request correction of inaccurate or incomplete information</li>
+                <li>Request deletion of your personal data under certain conditions</li>
+                <li>Restrict or object to processing of your data</li>
+                <li>Data portability in a structured, commonly used format</li>
+                <li>Withdraw consent where processing is based on consent</li>
+                <li>Lodge a complaint with a supervisory authority</li>
+            </ul>
+            
+            <h3>8. Data Retention</h3>
+            <p>We retain personal data only as long as necessary for:</p>
+            <ul>
+                <li>Providing services and maintaining your account</li>
+                <li>Complying with legal obligations (e.g., tax records)</li>
+                <li>Resolving disputes and enforcing agreements</li>
+                <li>Legitimate business purposes</li>
+            </ul>
+            <p>Inactive accounts may be deleted after 24 months of inactivity.</p>
+            
+            <h3>9. Children's Privacy</h3>
+            <p>Our services are not directed to individuals under 18. We do not knowingly collect personal information from children.</p>
+            
+            <h3>10. Changes to This Policy</h3>
+            <p>We may update this policy periodically. Material changes will be notified via email or platform notice at least 30 days in advance.</p>
+            
+            <div class="contact-info">
+                <h3>11. Contact Us</h3>
+                <p>For privacy-related inquiries or to exercise your rights, please contact:</p>
+                <p><strong>Data Protection Officer</strong><br>
+                Orbit Algo Ltd.<br>
+                1455 3rd Street San Francisco<br>
+                USA 94158<br>
+                Email: privacy@Orbitalgo.co<br>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="terms-modal">
+        <div class="policy-modal-content">
+            <button class="close-modal" id="close-terms-modal">×</button>
+            <h2>Terms of Service</h2>
+            <p class="last-updated">Last Updated: January 1, 2025</p>
+            
+            <div class="highlight">
+                <p>These Terms of Service ("Terms") govern your access to and use of Orbit Algo's algorithmic trading platform and related services ("Services"). By accessing or using our Services, you agree to be bound by these Terms.</p>
+            </div>
+            
+            <h3>1. Account Registration</h3>
+            <h4>1.1 Eligibility</h4>
+            <p>To use our Services, you must:</p>
+            <ul>
+                <li>Be at least 18 years old</li>
+                <li>Have legal capacity to enter into binding contracts</li>
+                <li>Not be prohibited from receiving our Services under applicable laws</li>
+                <li>Provide accurate and complete registration information</li>
+            </ul>
+            
+            <h4>1.2 Account Security</h4>
+            <p>You are responsible for:</p>
+            <ul>
+                <li>Maintaining confidentiality of your account credentials</li>
+                <li>All activities that occur under your account</li>
+                <li>Promptly notifying us of any unauthorized access or security breaches</li>
+            </ul>
+            
+            <h3>2. Description of Services</h3>
+            <p>Orbit Algo provides:</p>
+            <ul>
+                <li><strong>Algorithmic Trading Software:</strong> AI-driven trading algorithms for various financial instruments</li>
+                <li><strong>Broker Integration:</strong> Tools for connecting with MT5 brokers</li>
+                <li><strong>Educational Resources:</strong> Market analysis, tutorials, and strategy guides</li>
+                <li><strong>Performance Analytics:</strong> Tools for backtesting and analyzing trading strategies</li>
+            </ul>
+            <p>Our Services are for educational purposes only and do not constitute financial advice.</p>
+            
+            <h3>3. User Responsibilities</h3>
+            <h4>3.1 Acceptable Use</h4>
+            <p>You agree to:</p>
+            <ul>
+                <li>Use Services only for lawful purposes</li>
+                <li>Comply with all applicable laws and regulations</li>
+                <li>Not engage in market manipulation or abusive trading practices</li>
+                <li>Not reverse engineer, decompile, or disassemble our software</li>
+            </ul>
+            
+            <h4>3.2 Prohibited Activities</h4>
+            <p>You may not:</p>
+            <ul>
+                <li>Use our Services to violate any laws or regulations</li>
+                <li>Attempt to gain unauthorized access to our systems</li>
+                <li>Distribute viruses or malicious code</li>
+                <li>Use automated means to access Services without permission</li>
+                <li>Impersonate any person or entity</li>
+            </ul>
+            
+            <h3>4. Intellectual Property</h3>
+            <p>All content, software, and materials provided by Orbit Algo are protected by intellectual property laws. Specifically:</p>
+            <ul>
+                <li>Our algorithms, trading strategies, and software are proprietary</li>
+                <li>You receive a limited, non-exclusive, non-transferable license to use our software</li>
+                <li>You may not copy, modify, distribute, or create derivative works without authorization</li>
+                <li>All trademarks, logos, and service marks are our property</li>
+            </ul>
+            
+            <h3>5. Payments and Billing</h3>
+            <h4>5.1 Subscription Plans</h4>
+            <p>We offer:</p>
+            <ul>
+                <li>Annual subscription plans with automatic renewal</li>
+                <li>3-day free trial period for new users</li>
+                <li>Different tiers with varying features and limits</li>
+            </ul>
+            
+            <h4>5.2 Fees and Charges</h4>
+            <p>You agree to:</p>
+            <ul>
+                <li>Pay all applicable fees for subscribed Services</li>
+                <li>Provide accurate billing information</li>
+                <li>Authorize us to charge your payment method for renewal periods</li>
+            </ul>
+            
+            <h4>5.3 Refund Policy</h4>
+            <p>We offer:</p>
+            <ul>
+                <li>Full refunds within 14 days of initial purchase (excluding trial period)</li>
+                <li>No refunds for partial subscription periods after 14 days</li>
+                <li>Refund requests must be submitted via our support system</li>
+            </ul>
+            
+            <h3>6. Risk Disclosure</h3>
+            <p>Trading financial instruments involves substantial risk:</p>
+            <ul>
+                <li>You may lose more than your initial investment</li>
+                <li>Past performance does not guarantee future results</li>
+                <li>Algorithmic trading carries additional technical risks including system failures</li>
+                <li>Market conditions may change rapidly and unpredictably</li>
+            </ul>
+            <p>You should carefully consider your investment objectives and risk tolerance before trading.</p>
+            
+            <h3>7. Limitation of Liability</h3>
+            <p>To the maximum extent permitted by law:</p>
+            <ul>
+                <li>We shall not be liable for any indirect, incidental, or consequential damages</li>
+                <li>Our total liability for any claims shall not exceed the fees paid by you in the last 12 months</li>
+                <li>We are not responsible for trading losses, broker actions, or market conditions</li>
+                <li>We do not guarantee uninterrupted or error-free operation of our Services</li>
+            </ul>
+            
+            <h3>8. Termination</h3>
+            <h4>8.1 By You</h4>
+            <p>You may cancel your subscription at any time through your account settings. Cancellation will take effect at the end of your current billing period.</p>
+            
+            <h4>8.2 By Us</h4>
+            <p>We may suspend or terminate your account if:</p>
+            <ul>
+                <li>You violate these Terms</li>
+                <li>Required by law or regulatory authority</li>
+                <li>We discontinue the Services</li>
+            </ul>
+            
+            <h3>9. Dispute Resolution</h3>
+            <h4>9.1 Governing Law</h4>
+            <p>These Terms shall be governed by the laws of Singapore, without regard to conflict of law principles.</p>
+            
+            <h4>9.2 Arbitration</h4>
+            <p>Any disputes shall be resolved through binding arbitration in Singapore under the rules of the Singapore International Arbitration Centre.</p>
+            
+            <h3>10. Changes to Terms</h3>
+            <p>We may modify these Terms at any time. Material changes will be notified at least 30 days in advance. Continued use after changes constitutes acceptance.</p>
+            
+            <h3>11. General Provisions</h3>
+            <ul>
+                <li>These Terms constitute the entire agreement between you and Orbit Algo</li>
+                <li>If any provision is found invalid, the remaining provisions remain in effect</li>
+                <li>Our failure to enforce any right does not constitute a waiver</li>
+                <li>You may not assign these Terms without our written consent</li>
+            </ul>
+            
+            <div class="contact-info">
+                <h3>12. Contact Information</h3>
+                <p>For questions about these Terms, please contact:</p>
+                <p><strong>Legal Department</strong><br>
+                Orbit Algo Ltd.<br>
+                1455 3rd Street San Francisco<br>
+                USA CA 94158<br>
+                Email: legal@Orbitalgo.co<br>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="disclaimer-modal">
+        <div class="policy-modal-content">
+            <button class="close-modal" id="close-disclaimer-modal">×</button>
+            <h2>Risk Disclosure Statement</h2>
+            
+            <div class="highlight">
+                <p>This Risk Disclosure Statement outlines the substantial risks involved in algorithmic trading. By using Orbit Algo's services, you acknowledge and accept these risks.</p>
+            </div>
+            
+            <h3>1. General Trading Risks</h3>
+            <p>Trading financial instruments carries inherent risks including:</p>
+            <ul>
+                <li><strong>Market Risk:</strong> Prices may move rapidly and unpredictably due to economic, political, or other factors</li>
+                <li><strong>Leverage Risk:</strong> Using leverage can amplify both gains and losses</li>
+                <li><strong>Liquidity Risk:</strong> Some instruments may become illiquid, making it difficult to exit positions</li>
+                <li><strong>Volatility Risk:</strong> Highly volatile markets may result in significant losses</li>
+            </ul>
+            
+            <h3>2. Algorithmic Trading Specific Risks</h3>
+            <p>Algorithmic trading introduces additional risks:</p>
+            <ul>
+                <li><strong>System Failures:</strong> Technical issues may prevent order execution or cause errors</li>
+                <li><strong>Connectivity Issues:</strong> Internet or broker connection problems may disrupt trading</li>
+                <li><strong>Latency:</strong> Delays in order execution may result in unfavorable prices</li>
+                <li><strong>Over-Optimization:</strong> Strategies may perform well in backtests but fail in live markets</li>
+                <li><strong>Programming Errors:</strong> Bugs in trading algorithms may cause unintended trades</li>
+            </ul>
+            
+            <h3>3. No Investment Advice</h3>
+            <p>Orbit Algo provides educational tools and algorithmic trading software only. We do not:</p>
+            <ul>
+                <li>Provide personalized investment advice or recommendations</li>
+                <li>Guarantee profits or specific performance results</li>
+                <li>Act as your broker or financial advisor</li>
+            </ul>
+            
+            <h3>4. Past Performance</h3>
+            <p>Historical performance results are provided for informational purposes only and have these limitations:</p>
+            <ul>
+                <li>Results may be based on simulated or hypothetical trading</li>
+                <li>They do not account for all market factors that may affect execution</li>
+                <li>They are not indicative of future results or performance</li>
+            </ul>
+            
+            <h3>5. Broker-Related Risks</h3>
+            <p>Orbit Algo is not responsible for:</p>
+            <ul>
+                <li>Execution quality, slippage, or rejections by your broker</li>
+                <li>Funds held with your broker</li>
+                <li>Broker platform outages or technical issues</li>
+                <li>Broker insolvency or regulatory actions against your broker</li>
+            </ul>
+            
+            <h3>6. User Responsibility</h3>
+            <p>By using our services, you acknowledge that:</p>
+            <ul>
+                <li>You understand these risks and are willing to accept them</li>
+                <li>You are solely responsible for all trading decisions</li>
+                <li>You have sufficient knowledge and experience to understand algorithmic trading</li>
+                <li>You have sought independent financial advice if necessary</li>
+            </ul>
+            
+            <h3>7. Recommended Practices</h3>
+            <p>To manage these risks, we recommend:</p>
+            <ul>
+                <li>Starting with small position sizes</li>
+                <li>Testing all strategies thoroughly in demo accounts</li>
+                <li>Implementing appropriate risk management measures</li>
+                <li>Monitoring automated trading systems regularly</li>
+                <li>Maintaining sufficient capital to withstand market fluctuations</li>
+            </ul>
+            
+            <div class="highlight">
+                <p><strong>Warning:</strong> You should only trade with money you can afford to lose. Algorithmic trading may not be suitable for all investors.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize TradingView charts
+        function initializeCharts() {
+            new TradingView.widget({
+                "container_id": "btcusd-chart",
+                "width": "100%",
+                "height": "100%",
+                "symbol": "BITSTAMP:BTCUSD",
+                "interval": "60",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#0f172a",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "show_popup_button": true,
+                "popup_width": "1000",
+                "popup_height": "650"
+            });
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (!this.id.includes('trial-btn') && !this.id.includes('get-started-btn') && !this.id.includes('write-review-btn')) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Navbar effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 0) {
+                navbar.style.background = 'rgba(15, 15, 26, 0.98)';
+                navbar.style.padding = '0.8rem 0';
+            } else {
+                navbar.style.background = 'rgba(15, 15, 26, 0.95)';
+                navbar.style.padding = '1rem 0';
+            }
+        });
+
+        // Currency symbols
+        function createCurrencySymbols() {
+            const heroSection = document.querySelector('.hero');
+            const currencies = ['$', '€', '£', '¥', '₿'];
+            const symbolCount = 20;
+
+            for (let i = 0; i < symbolCount; i++) {
+                const symbol = document.createElement('div');
+                symbol.classList.add('currency-symbol');
+                symbol.textContent = currencies[Math.floor(Math.random() * currencies.length)];
+                symbol.style.top = `${Math.random() * 100}%`;
+                symbol.style.left = `${Math.random() * 100}%`;
+                symbol.style.fontSize = `${Math.random() * 1 + 1}rem`;
+                symbol.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                symbol.style.animationDelay = `${Math.random() * 5}s`;
+                setTimeout(() => symbol.classList.add('visible'), 100);
+                heroSection.appendChild(symbol);
+            }
+        }
+
+        // Timeframe buttons
+        document.querySelectorAll('.timeframe-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.timeframe-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                const symbol = this.closest('.single-chart-container').querySelector('.symbol-info span').textContent;
+                const timeframe = this.textContent;
+                console.log(`Changing ${symbol} chart to ${timeframe} timeframe`);
+            });
+        });
+
+        // Toggle menu
+        const toggleButton = document.getElementById('toggle-button');
+        const navLinks = document.getElementById('nav-links');
+        const navLinksItems = document.querySelectorAll('.nav-links li');
+
+        toggleButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            // Toggle between hamburger and close icon
+            const icon = toggleButton.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+            
+            // Animate nav items
+            navLinksItems.forEach((item, index) => {
+                if (navLinks.classList.contains('active')) {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                    item.style.transitionDelay = `${0.1 + (index * 0.1)}s`;
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(20px)';
+                    item.style.transitionDelay = '0s';
+                }
+            });
+        });
+
+        // Close mobile menu when clicking a link
+        navLinksItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                toggleButton.querySelector('i').classList.remove('fa-times');
+                toggleButton.querySelector('i').classList.add('fa-bars');
+                
+                navLinksItems.forEach(item => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(20px)';
+                });
+            });
+        });
+
+        // Modal handling
+        const trialModal = document.getElementById('trial-modal');
+        const getStartedModal = document.getElementById('get-started-modal');
+        const reviewModal = document.getElementById('review-modal');
+        const thankYouMessage = document.getElementById('thank-you-message');
+        const reviewThankYou = document.getElementById('review-thank-you');
+        const trialForm = document.getElementById('trial-form');
+        const getStartedForm = document.getElementById('get-started-form');
+        const reviewForm = document.getElementById('review-form');
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+        const privacyModal = document.getElementById('privacy-policy-modal');
+        const termsModal = document.getElementById('terms-modal');
+        
+        // Education modals
+        const beginnersModal = document.getElementById('beginners-guide-modal');
+        const strategyModal = document.getElementById('strategy-modal');
+        const tutorialModal = document.getElementById('tutorial-modal');
+        const faqModal = document.getElementById('faq-modal');
+
+        // Open trial modal
+        document.querySelectorAll('#start-trial-btn, #basic-trial-btn, #gold-trial-btn, #premium-trial-btn, #forex-trial-btn, #gold-forex-trial-btn, #all-markets-trial-btn, #cta-trial-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                trialModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Open get started modal
+        document.getElementById('get-started-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            getStartedModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Open review modal
+        document.getElementById('write-review-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            reviewModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Open education modals
+        document.querySelector('.step-card:nth-child(1)').addEventListener('click', () => {
+            beginnersModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        document.querySelector('.step-card:nth-child(2)').addEventListener('click', () => {
+            strategyModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        document.querySelector('.step-card:nth-child(3)').addEventListener('click', () => {
+            tutorialModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        document.querySelector('.step-card:nth-child(4)').addEventListener('click', () => {
+            faqModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Open legal modals
+        document.getElementById('privacy-policy-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            privacyModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        document.getElementById('terms-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            termsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        document.getElementById('disclaimer-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            disclaimerModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close modals
+        document.getElementById('close-trial-modal').addEventListener('click', () => {
+            trialModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-get-started-modal').addEventListener('click', () => {
+            getStartedModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-review-modal').addEventListener('click', () => {
+            reviewModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-beginners-modal').addEventListener('click', () => {
+            beginnersModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        document.getElementById('close-strategy-modal').addEventListener('click', () => {
+            strategyModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        document.getElementById('close-tutorial-modal').addEventListener('click', () => {
+            tutorialModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        document.getElementById('close-faq-modal').addEventListener('click', () => {
+            faqModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-disclaimer-modal').addEventListener('click', () => {
+            disclaimerModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-privacy-modal').addEventListener('click', () => {
+            privacyModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-terms-modal').addEventListener('click', () => {
+            termsModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-thank-you').addEventListener('click', () => {
+            thankYouMessage.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('close-review-thank-you').addEventListener('click', () => {
+            reviewThankYou.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Handle form submissions
+        trialForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(trialForm);
+            console.log({
+                name: formData.get('name'),
+                mobile: formData.get('mobile'),
+                mt5_id: formData.get('mt5-id'),
+                mt5_password: formData.get('mt5-password'),
+                mt5_server: formData.get('mt5-server')
+            });
+            trialModal.style.display = 'none';
+            thankYouMessage.style.display = 'block';
+            trialForm.reset();
+            setTimeout(() => {
+                thankYouMessage.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 3000);
+        });
+
+        getStartedForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(getStartedForm);
+            console.log({
+                name: formData.get('name'),
+                email: formData.get('email'),
+                mobile: formData.get('mobile')
+            });
+            getStartedModal.style.display = 'none';
+            thankYouMessage.style.display = 'block';
+            getStartedForm.reset();
+            setTimeout(() => {
+                thankYouMessage.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 3000);
+        });
+
+        // Star rating functionality
+        document.querySelectorAll('.star-rating .stars i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                const stars = this.parentElement.querySelectorAll('i');
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+                
+                document.getElementById('rating-value').value = rating;
+            });
+        });
+
+        // Handle review form submission
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(reviewForm);
+            
+            // In a real application, you would send this data to your server
+            console.log({
+                name: formData.get('name'),
+                location: formData.get('location'),
+                rating: formData.get('rating'),
+                review: formData.get('review')
+            });
+            
+            reviewModal.style.display = 'none';
+            reviewThankYou.style.display = 'block';
+            reviewForm.reset();
+            
+            // Reset stars
+            document.querySelectorAll('.star-rating .stars i').forEach(star => {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            });
+            
+            setTimeout(() => {
+                reviewThankYou.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 3000);
+        });
+
+        // Review carousel scrolling
+        const reviewsContainer = document.getElementById('reviews-container');
+        const scrollLeftBtn = document.getElementById('scroll-left');
+        const scrollRightBtn = document.getElementById('scroll-right');
+
+        scrollLeftBtn.addEventListener('click', () => {
+            const cardWidth = reviewsContainer.querySelector('.review-card').offsetWidth + 32; // card width + gap (2rem = 32px)
+            reviewsContainer.scrollBy({
+                left: -cardWidth,
+                behavior: 'smooth'
+            });
+        });
+
+        scrollRightBtn.addEventListener('click', () => {
+            const cardWidth = reviewsContainer.querySelector('.review-card').offsetWidth + 32; // card width + gap (2rem = 32px)
+            reviewsContainer.scrollBy({
+                left: cardWidth,
+                behavior: 'smooth'
+            });
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            createCurrencySymbols();
+            initializeCharts();
+            document.querySelectorAll('.feature-card, .pricing-card, .bot-card, .review-card').forEach((card, index) => {
+                card.style.animation = `fadeInUp 1s ease ${index * 0.1}s both`;
+            });
+        });
+
+        // Keyboard escape to close modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>
