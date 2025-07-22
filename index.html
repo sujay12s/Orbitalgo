@@ -3083,5 +3083,27 @@
             }
         });
     </script>
+<script>
+const BASE = "https://mangosb-backend.onrender.com";
+
+async function postForm(formId, endpoint, successMsg) {
+  const form = document.getElementById(formId);
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const res = await fetch(BASE + endpoint, {
+      method: "POST",
+      body: data
+    });
+    const json = await res.json();
+    alert(json.status === "success" ? successMsg : "Something went wrong");
+    form.reset();
+  });
+}
+
+// Attach form handlers
+postForm("get-started-form", "/submit-lead", "Thanks! We'll contact you shortly.");
+postForm("trial-form", "/submit-trial", "Trial request received. We'll get back soon.");
+</script>
 </body>
 </html>
