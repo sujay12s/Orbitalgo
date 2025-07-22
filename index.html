@@ -3088,6 +3088,7 @@ const BASE = "https://mangosb-backend.onrender.com";
 
 async function postForm(formId, endpoint, successMsg) {
   const form = document.getElementById(formId);
+  if (!form) return;  
   form.addEventListener("submit", async e => {
     e.preventDefault();
     const data = new FormData(form);
@@ -3096,7 +3097,7 @@ async function postForm(formId, endpoint, successMsg) {
       body: data
     });
     const json = await res.json();
-    alert(json.status === "success" ? successMsg : "Something went wrong");
+    alert(json.result.message|| sucessMsg);
     form.reset();
   });
 }
