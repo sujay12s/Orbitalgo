@@ -1,3110 +1,744 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Orbit Algo - Institutional-grade algorithmic trading platform with AI-driven strategies and MT5 broker integration.">
-     <meta name="robots"content="index, follow">
-    <title>Orbit Algo - Institutional-Grade Algorithmic Trading</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://s3.tradingview.com/tv.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(15, 15, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-        }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: #00d4ff;
-        }
-
-        .nav-links a:after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #00d4ff;
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover:after {
-            width: 100%;
-        }
-
-        .cta-button {
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            color: white;
-            padding: 0.9rem 1.8rem;
-            border: none;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-            font-size: 1rem;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
-        }
-
-        /* Toggle Button */
-        .toggle-button {
-            display: none;
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            color: #ffffff;
-            cursor: pointer;
-            z-index: 1001;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-button:hover {
-            color: #00d4ff;
-            transform: scale(1.1);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            padding: 8rem 2rem 4rem;
-            background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
-            overflow: hidden;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #ffffff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.4rem;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 2.5rem;
-            max-width: 750px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            color: white;
-            padding: 1.2rem 2.5rem;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            padding: 1.2rem 2.5rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #00d4ff;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 2rem;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ffffff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .section-header p {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.3);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: rotate(10deg) scale(1.1);
-            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .feature-card h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #ffffff;
-        }
-
-        .feature-card p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-        }
-
-        /* Pricing Section */
-        .pricing {
-            padding: 6rem 2rem;
-            max-width: 1300px;
-            margin: 0 auto;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .pricing-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.3);
-        }
-
-        .popular-tag {
-            position: absolute;
-            top: 20px;
-            right: -10px;
-            background: linear-gradient(45deg, #ffd700, #ffb700);
-            color: #0f0f1a;
-            padding: 0.5rem 1.5rem;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            transform: rotate(5deg);
-        }
-
-        .pricing-card h3 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #ffffff;
-        }
-
-        .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #00d4ff;
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-card .per-year {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-card .per-month {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-card ul {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .pricing-card ul li {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .pricing-card ul li i {
-            color: #00d4ff;
-        }
-
-        .pricing-card .btn-primary {
-            display: inline-block;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-        }
-
-        /* Floating Elements */
-        .floating-element {
-            position: absolute;
-            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(90, 103, 216, 0.1));
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-            z-index: 1;
-        }
-
-        .floating-element:nth-child(1) {
-            width: 60px;
-            height: 60px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-element:nth-child(2) {
-            width: 80px;
-            height: 80px;
-            top: 60%;
-            right: 15%;
-            animation-delay: 2s;
-        }
-
-        .floating-element:nth-child(3) {
-            width: 40px;
-            height: 40px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
-        /* Currency Symbols */
-        .currency-symbol {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 1.5rem;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            user-select: none;
-            z-index: 1;
-            animation: float 15s ease-in-out infinite;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        .currency-symbol.visible {
-            opacity: 0.4;
-        }
-
-        .currency-symbol:hover {
-            opacity: 0.8;
-            color: #00d4ff;
-            transform: scale(1.5);
-        }
-
-        /* Stats Section */
-        .stats {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(90, 103, 216, 0.1));
-            padding: 4rem 2rem;
-            margin: 4rem 0;
-        }
-
-        .stats-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            text-align: center;
-        }
-
-        .stat-item {
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-item h3 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #00d4ff;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* About Us Section */
-        .about-us {
-            padding: 6rem 2rem;
-            max-width: 1300px;
-            margin: 0 auto;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .about-us h2 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #ffffff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .about-us p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-
-        /* Customer Reviews Section */
-        .reviews-section {
-            padding: 4rem 2rem;
-            max-width: 1300px;
-            margin: 0 auto;
-            position: relative; /* Needed for absolute positioning of arrows */
-        }
-
-        .reviews-wrapper {
-            position: relative;
-            margin-top: 2rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .reviews-container {
-            display: flex; /* Changed to flex for horizontal scrolling */
-            overflow-x: scroll; /* Enable horizontal scrolling */
-            scroll-snap-type: x mandatory; /* Snap to cards */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
-            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
-            gap: 2rem; /* Consistent spacing between cards */
-            padding-bottom: 1rem; /* Space for potential scrollbar or just padding */
-            margin: 0 -2rem; /* Offset padding from reviews-wrapper to make cards reach edges */
-            padding: 0 2rem; /* Internal padding */
-        }
-
-        .reviews-container::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome/Safari */
-        }
-
-        .review-card {
-            flex: 0 0 380px; /* Do not grow, do not shrink, fixed width */
-            min-width: 380px; /* Explicit min-width for consistent sizing */
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: auto; /* Allow height to adjust based on content */
-            scroll-snap-align: start; /* Snap point for each card */
-        }
-
-        .review-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.2);
-        }
-
-        .review-card p {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1rem;
-            font-style: italic;
-            display: -webkit-box;
-            -webkit-line-clamp: 4; /* Limit to 4 lines */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.5;
-        }
-
-        .review-card .reviewer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .review-card h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .review-card .location {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .review-card .country-flag {
-            font-size: 1.5rem;
-            margin-right: 0.5rem;
-        }
-
-        .review-card .stars {
-            color: #ffd700;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .scroll-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: #00d4ff;
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .scroll-button:hover {
-            background: #00d4ff;
-            color: white;
-            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .scroll-button.left {
-            left: 0rem;
-        }
-
-        .scroll-button.right {
-            right: 0rem;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 6rem 2rem;
-            text-align: center;
-            background: radial-gradient(ellipse at center, rgba(90, 103, 216, 0.2) 0%, transparent 70%);
-        }
-
-        .cta-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .cta-section h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: #ffffff;
-        }
-
-        .cta-section p {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2.5rem;
-        }
-
-        /* Security Badges */
-        .security-badges {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .security-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.7rem 1.2rem;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .security-badge i {
-            color: #00d4ff;
-        }
-        
-        /* Map Section */
-        .map-section {
-            padding: 4rem 2rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .map-container {
-            max-width: 1300px;
-            margin: 2rem auto 0;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            align-items: center;
-        }
-        
-        .map-embed {
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            height: 100%;
-        }
-        
-        .map-embed iframe {
-            width: 100%;
-            height: 450px;
-            border: 0;
-        }
-        
-        .map-info {
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .map-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: #00d4ff;
-        }
-        
-        .map-info p {
-            margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        
-        .map-info i {
-            color: #00d4ff;
-            width: 20px;
-            text-align: center;
-        }
-
-        /* Footer */
-        .footer {
-            background: rgba(15, 15, 26, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 4rem 2rem 2rem;
-        }
-
-        .footer-content {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3rem;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .footer-column h3 {
-            color: #ffffff;
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .footer-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-left: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #00d4ff;
-            padding-left: 5px;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            margin-top: 3rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            justify-content: center;
-        }
-
-        .social-links a {
-            color: rgba(255, 255, 255, 0.7);
-            background: rgba(255, 255, 255, 0.1);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: white;
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            transform: translateY(-3px);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-content h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: #ffffff;
-        }
-
-        .modal-content form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .modal-content input {
-            padding: 0.8rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            font-size: 1rem;
-        }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: #00d4ff;
-        }
-
-        .modal-content button[type="submit"] {
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            color: white;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-content button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .thank-you-message {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
-            color: #ffffff;
-            z-index: 2001;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 400px;
-            width: 90%;
-        }
-
-        /* Review Modal Specific Styles */
-        .star-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .star-rating .stars {
-            display: flex;
-            gap: 0.3rem;
-        }
-
-        .star-rating .stars i {
-            color: #ffd700;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .star-rating .stars i:hover {
-            transform: scale(1.2);
-        }
-
-        .modal-content textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            font-size: 1rem;
-            min-height: 100px;
-            margin-bottom: 1rem;
-            resize: vertical;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .modal-content textarea:focus {
-            outline: none;
-            border-color: #00d4ff;
-        }
-
-        /* Live Charts Section (Single BTC Chart) */
-        .single-chart-section {
-            padding: 4rem 2rem;
-            max-width: 1300px;
-            margin: 0 auto 4rem;
-        }
-
-        .single-chart-container {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            width: 800px;
-            max-width: 100%;
-            aspect-ratio: 1 / 1;
-            margin: 0 auto;
-        }
-
-        .chart-header {
-            padding: 1.2rem;
-            background: linear-gradient(90deg, #00d4ff, #5a67d8);
-            color: white;
-            font-size: 1.4rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-        .chart-header .symbol-info {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .chart-content {
-            height: calc(100% - 70px);
-            position: relative;
-        }
-
-        .chart-timeframe {
-            display: flex;
-            background: rgba(30, 41, 59, 0.5);
-            padding: 0.5rem;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .timeframe-btn {
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            padding: 0.3rem 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .timeframe-btn:hover, .timeframe-btn.active {
-            background: #00d4ff;
-            color: white;
-            border-color: #00d4ff;
-        }
-
-        /* Bot Section */
-        .bot-section {
-            padding: 6rem 2rem;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .bot-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .bot-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bot-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.3);
-        }
-
-        .bot-card h3 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .bot-card h3 i {
-            color: #00d4ff;
-        }
-
-        .bot-card .price-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            color: white;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .bot-card ul {
-            list-style: none;
-            margin: 1.5rem 0;
-        }
-
-        .bot-card ul li {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-
-        .bot-card ul li i {
-            color: #00d4ff;
-            margin-top: 4px;
-        }
-
-        /* How it Works */
-        .how-it-works {
-            padding: 6rem 2rem;
-            background: rgba(15, 23, 42, 0.5);
-        }
-
-        .steps-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            max-width: 1300px;
-            margin: 4rem auto 0;
-        }
-
-        .step-card {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .step-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.2);
-        }
-
-        .step-number {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #00d4ff, #5a67d8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .step-card h4 {
-            font-size: 1.3rem;
-            margin: 1.5rem 0 1rem;
-            color: #ffffff;
-        }
-
-        .step-card p {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Education Modals */
-        .modal-body {
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 1rem;
-            text-align: left;
-        }
-        
-        .modal-body h3 {
-            margin-top: 1.5rem;
-            color: #00d4ff;
-            font-size: 1.3rem;
-        }
-        
-        .modal-body h4 {
-            margin: 1rem 0 0.5rem;
-            color: #ffffff;
-        }
-        
-        .modal-body ul {
-            margin: 1rem 0;
-            padding-left: 1.5rem;
-        }
-        
-        .modal-body li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .pattern {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .pattern:last-child {
-            border-bottom: none;
-        }
-        
-        .faq-item {
-            margin-bottom: 1.5rem;
-        }
-        
-        .faq-item h3 {
-            color: #00d4ff;
-        }
-        
-        .faq-item p {
-            margin-top: 0.5rem;
-        }
-        
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-        }
-
-        /* Risk Warning Section */
-        .risk-warning {
-            padding: 1.5rem 2rem;
-            background: rgba(255, 0, 0, 0.1);
-            border-top: 1px solid rgba(255, 0, 0, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
-            text-align: center;
-            margin-top: 2rem;
-        }
-        
-        .risk-warning-content {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .risk-warning strong {
-            color: #ff5252;
-        }
-        
-        /* Disclaimer Modal */
-        .modal-body ul {
-            margin: 1rem 0;
-            padding-left: 1.5rem;
-        }
-        
-        .modal-body li {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Enhanced styles for policy modals */
-        .policy-modal-content {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 2.5rem;
-            max-width: 850px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            text-align: left;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            line-height: 1.7;
-        }
-        
-        .policy-modal-content h2 {
-            color: #00d4ff;
-            margin-bottom: 1.8rem;
-            text-align: center;
-            font-size: 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 1rem;
-        }
-        
-        .policy-modal-content h3 {
-            color: #ffffff;
-            margin: 2rem 0 1rem;
-            font-size: 1.4rem;
-        }
-        
-        .policy-modal-content h4 {
-            color: rgba(255, 255, 255, 0.9);
-            margin: 1.5rem 0 0.8rem;
-            font-size: 1.15rem;
-        }
-        
-        .policy-modal-content p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1.2rem;
-        }
-        
-        .policy-modal-content ul {
-            margin: 1rem 0 1.5rem;
-            padding-left: 1.8rem;
-        }
-        
-        .policy-modal-content li {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.7rem;
-            position: relative;
-        }
-        
-        .policy-modal-content li:before {
-            content: "•";
-            color: #00d4ff;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-        
-        .policy-modal-content .highlight {
-            background: rgba(0, 212, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            border-left: 3px solid #00d4ff;
-        }
-        
-        .policy-modal-content .last-updated {
-            text-align: right;
-            font-style: italic;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 2.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .policy-modal-content .contact-info {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            
-            .hero p {
-                font-size: 1.2rem;
-            }
-            
-            .section-header h2 {
-                font-size: 2.5rem;
-            }
-            
-            .section-header p {
-                font-size: 1.1rem;
-            }
-            
-            .single-chart-container {
-                width: 100%;
-            }
-            .map-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .toggle-button {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 80px;
-                left: 0;
-                right: 0;
-                background: rgba(15, 15, 26, 0.98);
-                flex-direction: column;
-                align-items: center;
-                padding: 2rem 0;
-                gap: 1.5rem;
-                clip-path: circle(0px at 90% -10%);
-                -webkit-clip-path: circle(0px at 90% -10%);
-                transition: all 0.5s ease-out;
-                pointer-events: none;
-                backdrop-filter: blur(20px);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .nav-links.active {
-                clip-path: circle(1000px at 90% -10%);
-                -webkit-clip-path: circle(1000px at 90% -10%);
-                pointer-events: all;
-            }
-
-            .nav-links li {
-                opacity: 0;
-                transform: translateY(20px);
-                transition: all 0.3s ease 0.1s;
-            }
-
-            .nav-links.active li {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            /* Add transition delays for all 6 navigation items */
-            .nav-links li:nth-child(1) { transition-delay: 0.1s; }
-            .nav-links li:nth-child(2) { transition-delay: 0.2s; }
-            .nav-links li:nth-child(3) { transition-delay: 0.3s; }
-            .nav-links li:nth-child(4) { transition-delay: 0.4s; }
-            .nav-links li:nth-child(5) { transition-delay: 0.5s; }
-            .nav-links li:nth-child(6) { transition-delay: 0.6s; }
-
-            .cta-button {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-            }
-
-            .nav-container {
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-
-            .hero { 
-                padding: 6rem 1rem 3rem; 
-                min-height: 90vh;
-            }
-            .hero h1 { 
-                font-size: 2.5rem; 
-                margin-bottom: 1rem;
-            }
-            .hero p { 
-                font-size: 1.1rem; 
-                margin-bottom: 2rem;
-            }
-            .hero-buttons { 
-                flex-direction: column; 
-                align-items: center;
-                gap: 1rem;
-            }
-            .btn-primary, .btn-secondary {
-                width: 100%;
-                max-width: 300px;
-                padding: 1rem;
-            }
-            
-            .features-grid { 
-                grid-template-columns: 1fr; 
-            }
-            .pricing-grid { 
-                grid-template-columns: 1fr; 
-            }
-            .stats-container { 
-                grid-template-columns: 1fr; 
-            }
-            .footer-content { 
-                grid-template-columns: 1fr; 
-                text-align: center; 
-                gap: 2rem;
-            }
-            .footer-links { 
-                display: flex; 
-                flex-direction: column; 
-                align-items: center; 
-            }
-            .social-links { 
-                justify-content: center; 
-            }
-            
-            .reviews-section {
-                padding: 4rem 1rem;
-            }
-
-            .reviews-container {
-                padding: 0 1rem;
-                margin: 0 -1rem;
-            }
-
-            .review-card {
-                flex: 0 0 90%;
-                min-width: 90%;
-                max-width: 400px;
-                padding: 1.5rem;
-            }
-
-            .scroll-button.left {
-                left: 0.5rem;
-            }
-
-            .scroll-button.right {
-                right: 0.5rem;
-            }
-            
-            .about-us { 
-                padding: 4rem 1rem; 
-            }
-            .about-us h2 { 
-                font-size: 2rem; 
-            }
-            .about-us p { 
-                font-size: 1rem; 
-            }
-            .bot-cards { 
-                grid-template-columns: 1fr; 
-            }
-            .steps-container { 
-                grid-template-columns: 1fr; 
-            }
-            
-            .section-header h2 {
-                font-size: 2.2rem;
-            }
-            
-            .section-header p {
-                font-size: 1.1rem;
-            }
-            
-            .feature-card, .pricing-card, .bot-card {
-                padding: 1.5rem;
-            }
-            
-            .feature-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-            
-            .modal-content {
-                padding: 1.5rem;
-            }
-            
-            .policy-modal-content {
-                padding: 1.5rem;
-            }
-            .map-container {
-                grid-template-columns: 1fr;
-            }
-            .map-info {
-                order: -1;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .section-header h2 {
-                font-size: 1.8rem;
-            }
-            
-            .feature-card h3, .pricing-card h3, .bot-card h3 {
-                font-size: 1.4rem;
-            }
-            
-            .security-badges {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .security-badge {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .bot-card .price-tag {
-                top: 15px;
-                right: 15px;
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            .chart-header {
-                font-size: 1.2rem;
-                padding: 0.8rem;
-            }
-            
-            .timeframe-btn {
-                padding: 0.2rem 0.6rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Interactive elements */
-        .pulse { animation: pulse 2s infinite; }
-
-        /* Tooltip */
-        .tooltip { position: relative; display: inline-block; }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: rgba(15, 15, 26, 0.95);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 0.5rem;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>New Luck Refurbished – Mysore's #1 Food Truck Fabricator</title>
+<meta name="description" content="New Luck Refurbished – Mysore's leading commercial vehicle fabrication unit. Auto to lorry, SS steel, ready-made & custom builds. 15+ years, 10,000+ happy customers across Karnataka.">
+<link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)">
+<link rel="preconnect" href="[fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+<link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;600;700&display=swap)" rel="stylesheet">
+<link rel="stylesheet" href="[cdnjs.cloudflare.com](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#E8620A;--orange-dark:#C0500A;--orange-light:#FFF0E8;--black:#111111;--gray:#4B4B4B;--gray-light:#F5F5F5;--border:#E5E5E5;--white:#FFFFFF;--green:#16A34A;--transition-smooth:cubic-bezier(0.4,0,0.2,1)}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Inter','Noto Sans Kannada',sans-serif;color:var(--black);background:var(--white);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+/* Navigation */
+nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);background:rgba(255,255,255,0.95)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-img{width:40px;height:40px;object-fit:contain;border-radius:10px}
+.logo-text{font-size:1rem;font-weight:700;color:var(--black);line-height:1.2}
+.logo-sub{font-size:0.65rem;color:var(--orange);font-weight:600;letter-spacing:0.08em;text-transform:uppercase}
+.nav-links{display:flex;gap:6px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--gray);font-size:0.85rem;font-weight:500;padding:8px 14px;border-radius:8px;transition:all .2s var(--transition-smooth)}
+.nav-links a:hover{color:var(--orange);background:var(--orange-light)}
+.nav-cta{background:var(--orange);color:white;padding:10px 20px;border-radius:10px;font-size:0.85rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .2s var(--transition-smooth);box-shadow:0 2px 8px rgba(232,98,10,0.3)}
+.nav-cta:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,98,10,0.4)}
+
+/* Language Toggle Switch */
+.lang-switch{display:flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:600;color:var(--gray)}
+.lang-switch span{transition:color .2s}
+.lang-switch span.active{color:var(--orange)}
+.toggle-track{width:44px;height:24px;background:var(--gray-light);border:2px solid var(--border);border-radius:99px;position:relative;cursor:pointer;transition:all .3s var(--transition-smooth)}
+.toggle-track:hover{border-color:var(--orange)}
+.toggle-track.active{background:var(--orange-light);border-color:var(--orange)}
+.toggle-knob{width:16px;height:16px;background:var(--orange);border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .3s var(--transition-smooth);box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.toggle-track.active .toggle-knob{transform:translateX(20px)}
+
+.hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--black);padding:8px}
+.mob-menu{display:none;flex-direction:column;background:white;border-bottom:1px solid var(--border);padding:16px 20px;gap:4px;animation:slideDown .3s var(--transition-smooth)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.mob-menu.open{display:flex}
+.mob-menu a{text-decoration:none;color:var(--gray);font-size:0.95rem;font-weight:500;padding:12px 0;border-bottom:1px solid var(--gray-light)}
+.mob-menu a:last-child{border:none}
+.mob-lang-switch{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 0;margin-top:8px;border-top:1px solid var(--border)}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,#0a0a0a 0%,#111 100%);padding:60px 20px 70px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,98,10,0.08) 0%,transparent 60%);pointer-events:none}
+.hero-heading-wrapper{position:relative;display:inline-block;max-width:720px;margin:0 auto}
+.hero h1{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:800;color:white;line-height:1.12;position:relative;z-index:2}
+.hero h1 span{color:var(--orange);background:linear-gradient(135deg,var(--orange) 0%,#FF8A4C 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,98,10,0.12);border:1px solid rgba(232,98,10,0.35);color:#FCA469;border-radius:99px;padding:6px 16px;font-size:0.75rem;font-weight:600;letter-spacing:0.04em;margin-bottom:24px;backdrop-filter:blur(4px)}
+.hero-sub{color:#A8A8A8;font-size:clamp(0.9rem,2.2vw,1.05rem);max-width:640px;margin:0 auto 36px;line-height:1.8;font-weight:400}
+.hero-sub strong{color:white;font-weight:600}
+.hero-sub .highlight{color:var(--orange);font-weight:600;background:rgba(232,98,10,0.12);padding:2px 6px;border-radius:6px}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-orange{background:linear-gradient(135deg,var(--orange) 0%,#D4560A 100%);color:white;padding:14px 28px;border-radius:12px;font-size:0.9rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .25s var(--transition-smooth);box-shadow:0 4px 20px rgba(232,98,10,0.4)}
+.btn-orange:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,98,10,0.5)}
+.btn-outline-white{border:2px solid rgba(255,255,255,0.2);color:white;padding:13px 26px;border-radius:12px;font-size:0.9rem;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .25s var(--transition-smooth);backdrop-filter:blur(4px)}
+.btn-outline-white:hover{border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05)}
+
+/* Stats */
+.hero-stats{display:flex;justify-content:center;gap:0;margin-top:50px;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;max-width:680px;margin-left:auto;margin-right:auto;background:rgba(255,255,255,0.02);backdrop-filter:blur(10px)}
+.hstat{flex:1;padding:24px 16px;text-align:center;border-right:1px solid rgba(255,255,255,0.06);position:relative}
+.hstat:last-child{border-right:none}
+.hstat-n{font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;color:var(--orange);line-height:1;font-variant-numeric:tabular-nums;display:inline-flex;align-items:flex-start}
+.hstat-n .plus{font-size:0.5em;font-weight:700;color:var(--orange);opacity:0.8;margin-left:2px;margin-top:0.15em;transition:opacity .5s}
+.hstat-l{font-size:0.65rem;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-top:8px;font-weight:600}
+
+/* Sections */
+.section{padding:80px 20px}
+.wrap{max-width:1100px;margin:0 auto}
+.sec-label{font-size:0.72rem;font-weight:700;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;color:var(--black);line-height:1.15;margin-bottom:14px}
+.sec-title span{color:var(--orange)}
+.sec-sub{color:var(--gray);font-size:0.95rem;max-width:580px;line-height:1.8}
+.sec-head{margin-bottom:48px}
+.centered{text-align:center}
+.centered .sec-sub{margin:0 auto}
+
+/* Vehicles */
+.vehicles-bg{background:var(--gray-light)}
+.veh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.veh-card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:24px;transition:all .3s var(--transition-smooth);cursor:pointer}
+.veh-card:hover{border-color:var(--orange);box-shadow:0 8px 32px rgba(232,98,10,0.12);transform:translateY(-4px)}
+.veh-img{width:100%;height:160px;background:linear-gradient(135deg,#f8f8f8 0%,#f0f0f0 100%);border-radius:12px;margin-bottom:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+.veh-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--transition-smooth)}
+.veh-card:hover .veh-img img{transform:scale(1.05)}
+.veh-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+.veh-card p{font-size:0.85rem;color:var(--gray);line-height:1.7}
+.veh-tag{display:inline-block;margin-top:14px;font-size:0.7rem;font-weight:600;background:var(--orange-light);color:var(--orange);padding:5px 12px;border-radius:99px}
+
+/* Why Us */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.why-right{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.why-box{background:var(--gray-light);border-radius:16px;padding:24px 20px;transition:all .3s var(--transition-smooth)}
+.why-box:hover{background:white;box-shadow:0 4px 20px rgba(0,0,0,0.06)}
+.why-box i{font-size:1.3rem;color:var(--orange);margin-bottom:12px;display:block}
+.why-box h4{font-size:0.95rem;font-weight:700;margin-bottom:8px}
+.why-box p{font-size:0.82rem;color:var(--gray);line-height:1.7}
+.why-proof{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+.proof-item{display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:var(--gray);line-height:1.6}
+.proof-item i{color:var(--green);font-size:0.9rem;flex-shrink:0;margin-top:3px}
+
+/* Process */
+.proc-bg{background:linear-gradient(180deg,#0d0d0d 0%,#111 100%)}
+.proc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3px;border-radius:16px;overflow:hidden}
+.proc-step{background:#161616;padding:36px 24px;transition:background .3s var(--transition-smooth);text-align:center}
+.proc-step:hover{background:#1a1a1a}
+.proc-num{font-size:3rem;font-weight:800;color:rgba(232,98,10,0.15);line-height:1;margin-bottom:12px}
+.proc-step h4{font-size:0.95rem;font-weight:700;color:white;margin-bottom:10px}
+.proc-step p{font-size:0.82rem;color:#666;line-height:1.7}
+.proc-img{width:64px;height:64px;margin:0 auto 16px}
+.proc-img img{width:100%;height:100%;object-fit:contain;border-radius:50%;transition:transform .3s var(--transition-smooth)}
+.proc-step:hover .proc-img img{transform:scale(1.08)}
+
+/* Reviews */
+.reviews-bg{background:var(--gray-light)}
+.rev-carousel{position:relative;overflow:hidden;margin-top:12px}
+.rev-track{display:flex;transition:transform .5s var(--transition-smooth);gap:20px;padding:8px 4px}
+.rev-card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:28px 24px;min-width:320px;flex-shrink:0;width:calc(33.33% - 14px);transition:all .3s var(--transition-smooth)}
+.rev-card:hover{border-color:var(--orange);box-shadow:0 4px 20px rgba(232,98,10,0.1)}
+.rev-stars{color:#FBB902;font-size:0.85rem;letter-spacing:3px;margin-bottom:12px}
+.rev-text{font-size:0.88rem;color:var(--gray);line-height:1.8;margin-bottom:18px}
+.rev-author{display:flex;align-items:center;gap:12px}
+.rev-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,#FF8A4C 100%);color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;flex-shrink:0}
+.rev-name{font-size:0.88rem;font-weight:600}
+.rev-meta{font-size:0.72rem;color:#999;display:flex;align-items:center;gap:6px}
+.rev-g-logo{font-size:0.75rem;color:#4285F4;font-weight:700}
+.rev-controls{display:flex;justify-content:center;gap:12px;margin-top:28px}
+.rev-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--border);background:white;cursor:pointer;font-size:0.9rem;color:var(--gray);transition:all .2s var(--transition-smooth);display:flex;align-items:center;justify-content:center}
+.rev-btn:hover{border-color:var(--orange);color:var(--orange);transform:scale(1.05)}
+.rev-dots{display:flex;align-items:center;gap:8px}
+.rev-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s var(--transition-smooth);cursor:pointer}
+.rev-dot.active{background:var(--orange);width:24px;border-radius:99px}
+.google-badge{display:inline-flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:99px;padding:8px 18px;font-size:0.78rem;margin-bottom:24px;font-weight:500}
+
+/* Lead Form */
+.lead-bg{background:linear-gradient(135deg,var(--orange) 0%,#C0500A 100%)}
+.lead-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.lead-left h2{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800;color:white;margin-bottom:16px;line-height:1.2}
+.lead-left p{color:rgba(255,255,255,0.85);font-size:0.95rem;line-height:1.8;margin-bottom:24px}
+.lead-perks{display:flex;flex-direction:column;gap:10px}
+.lead-perk{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.9);font-size:0.88rem}
+.lead-perk i{color:rgba(255,255,255,0.6);font-size:0.85rem}
+.lead-form{background:white;border-radius:20px;padding:36px 32px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.lead-form h3{font-size:1.1rem;font-weight:700;margin-bottom:24px;color:var(--black)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:0.78rem;font-weight:600;color:var(--gray);margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-family:'Inter','Noto Sans Kannada',sans-serif;font-size:0.88rem;color:var(--black);background:var(--gray-light);outline:none;transition:all .2s var(--transition-smooth)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--orange);background:white;box-shadow:0 0 0 4px rgba(232,98,10,0.1)}
+.fld textarea{resize:vertical;min-height:90px}
+.btn-submit-form{width:100%;background:linear-gradient(135deg,var(--orange) 0%,#D4560A 100%);color:white;border:none;padding:14px;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s var(--transition-smooth);box-shadow:0 4px 20px rgba(232,98,10,0.4)}
+.btn-submit-form:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,98,10,0.5)}
+#formMsg{text-align:center;font-size:0.82rem;margin-top:14px;min-height:24px}
+
+/* Kannada Banner */
+.kn-bar{background:linear-gradient(90deg,var(--orange-light) 0%,#FFF5EE 100%);border-bottom:2px solid var(--orange);padding:10px 20px;text-align:center;font-size:0.82rem;color:var(--orange-dark);font-weight:600;display:none;font-family:'Noto Sans Kannada','Inter',sans-serif}
+.kn-bar.show{display:block}
+
+/* Footer */
+footer{background:#0a0a0a;padding:48px 20px 24px}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand{color:#777;font-size:0.85rem;line-height:1.8}
+.footer-brand-name{color:white;font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.footer-brand-sub{color:var(--orange);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;margin-bottom:14px}
+.footer-col h5{color:#666;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:18px}
+.footer-col a{display:block;color:#555;font-size:0.82rem;text-decoration:none;margin-bottom:10px;transition:color .2s}
+.footer-col a:hover{color:var(--orange)}
+.footer-bottom{border-top:1px solid #1a1a1a;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:0.72rem;color:#444}
+.socials{display:flex;gap:12px}
+.socials a{width:36px;height:36px;border-radius:50%;border:1.5px solid #222;display:flex;align-items:center;justify-content:center;color:#555;font-size:0.85rem;text-decoration:none;transition:all .2s var(--transition-smooth)}
+.socials a:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+.footer-logo-img{width:56px;height:56px;object-fit:contain;border-radius:14px;margin-bottom:14px;background:#151515;padding:8px}
+
+/* WhatsApp Float */
+.wa-float{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);color:white;font-size:1.5rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,0.5);z-index:999;transition:all .3s var(--transition-smooth)}
+.wa-float:hover{transform:scale(1.1) translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,0.6)}
+.wa-float-label{position:fixed;bottom:36px;right:92px;background:#25D366;color:white;font-size:0.75rem;font-weight:600;padding:8px 14px;border-radius:99px;z-index:998;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.15);animation:fadeInLabel 1s .8s both}
+@keyframes fadeInLabel{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+
+/* Responsive */
+@media(max-width:900px){
+  .why-grid{grid-template-columns:1fr;gap:40px}
+  .lead-inner{grid-template-columns:1fr;gap:40px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .rev-card{min-width:280px;width:calc(50% - 10px)}
+}
+@media(max-width:768px){
+  .nav-links,.nav-cta,.lang-switch{display:none}
+  .hamburger{display:flex;align-items:center}
+  .hero-stats{flex-wrap:wrap}
+  .hstat{min-width:50%;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .hstat:nth-child(2){border-right:none}
+  .proc-grid{grid-template-columns:1fr 1fr}
+  .wa-float-label{display:none}
+  .footer-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .proc-grid{grid-template-columns:1fr}
+  .why-right{grid-template-columns:1fr}
+  .veh-img{height:140px}
+  .form-row{grid-template-columns:1fr}
+  .rev-card{min-width:260px;width:calc(90vw - 40px)}
+  .hero{padding:48px 16px 56px}
+  .section{padding:60px 16px}
+}
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#00d4ff" />
-                            <stop offset="100%" stop-color="#5a67d8" />
-                        </linearGradient>
-                        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-                            <feGaussianBlur stdDeviation="5" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
-                    </defs>
-                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#logoGradient)" stroke-width="8" stroke-dasharray="5,5" />
-                    <path d="M30,50 A20,20 0 1,1 70,50 A20,20 0 1,1 30,50" fill="none" stroke="url(#logoGradient)" stroke-width="8" />
-                    <circle cx="50" cy="30" r="5" fill="url(#logoGradient)" filter="url(#glow)" />
-                    <circle cx="50" cy="70" r="5" fill="url(#logoGradient)" filter="url(#glow)" />
-                    <path d="M50,30 L50,70 M30,50 L70,50" stroke="url(#logoGradient)" stroke-width="4" stroke-linecap="round" />
-                </svg>
-                <span style="background: linear-gradient(45deg, #00d4ff, #5a67d8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Orbit Algo</span>
-            </div>
-            <button class="toggle-button" id="toggle-button">
-                <i class="fas fa-bars"></i>
-            </button>
-            <ul class="nav-links" id="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#bots">Bots</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#about">About Us</a></li>
-            </ul>
-            <a href="#" class="cta-button" id="get-started-btn">Get Started</a>
-        </div>
-    </nav>
 
-    <section class="hero" id="home">
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        
-        <div class="hero-content">
-            <h1>Institutional-Grade Algorithmic Trading</h1>
-            <p>Unlock hedge-fund level trading strategies with AI-driven algorithms, seamlessly integrated with MT5 brokers.</p>
-            <div class="hero-buttons">
-                <a href="#" class="btn-primary pulse" id="start-trial-btn">Start Free Trial</a>
-                <a href="#pricing" class="btn-secondary">View Pricing</a>
-            </div>
-        </div>
-    </section>
+<div class="kn-bar" id="knBanner">
+  🍀 ನ್ಯೂ ಲಕ್ ರಿಫರ್ಬಿಶ್ಡ್ — ಮೈಸೂರಿನ ಅಗ್ರಮಾನ್ಯ ಫುಡ್ ಟ್ರಕ್ ತಯಾರಕರು | ಆಟೋದಿಂದ ಲಾರಿಯವರೆಗೆ | 10,000+ ಖುಷಿ ಗ್ರಾಹಕರು
+</div>
 
-    <div class="modal" id="trial-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-trial-modal">×</button>
-            <h2>Start Your Free Trial</h2>
-            <form id="trial-form">
-                <input type="text" name="name" placeholder="Full Name" required>
-                <input type="tel" name="mobile" placeholder="Mobile Number" required>
-                <input type="text" name="mt5-id" placeholder="MT5 Credential ID" required>
-                <input type="password" name="mt5-password" placeholder="MT5 Password" required>
-                <input type="text" name="mt5-server" placeholder="MT5 Server" required>
-                <button type="submit">Submit</button>
-            </form>
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23E8620A' rx='20'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E🍀%3C/text%3E%3C/svg%3E" alt="New Luck Logo" class="logo-img">
+      <div><div class="logo-text">New Luck Refurbished</div><div class="logo-sub">Mysore, Karnataka</div></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home" id="navHome">Home</a></li>
+      <li><a href="#vehicles" id="navVehicles">Vehicles</a></li>
+      <li><a href="#why" id="navWhy">Why Us</a></li>
+      <li><a href="#process" id="navProcess">Process</a></li>
+      <li><a href="#reviews" id="navReviews">Reviews</a></li>
+      <li><a href="#contact" id="navContact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="lang-switch">
+        <span id="langEn" class="active">EN</span>
+        <div class="toggle-track" id="langToggle" role="switch" aria-checked="false" tabindex="0">
+          <div class="toggle-knob"></div>
         </div>
+        <span id="langKn">ಕನ್ನಡ</span>
+      </div>
+      <a href="#contact" class="nav-cta" id="navCta">Get Free Quote</a>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><i class="fas fa-bars"></i></button>
     </div>
-
-    <div class="modal" id="get-started-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-get-started-modal">×</button>
-            <h2>Get Started</h2>
-            <form id="get-started-form">
-                <input type="text" name="name" placeholder="Full Name" required>
-                <input type="email" name="email" placeholder="Email Address" required>
-                <input type="tel" name="mobile" placeholder="Mobile Number" required>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+  </div>
+  <div class="mob-menu" id="mobMenu">
+    <a href="#home" onclick="closeMenu()" id="mobHome">Home</a>
+    <a href="#vehicles" onclick="closeMenu()" id="mobVehicles">Our Vehicles</a>
+    <a href="#why" onclick="closeMenu()" id="mobWhy">Why Us</a>
+    <a href="#process" onclick="closeMenu()" id="mobProcess">Process</a>
+    <a href="#reviews" onclick="closeMenu()" id="mobReviews">Reviews</a>
+    <a href="#contact" onclick="closeMenu()" id="mobContact">📞 Get Free Quote</a>
+    <div class="mob-lang-switch">
+      <span id="mobLangEn" class="active" style="font-weight:600;color:var(--gray)">English</span>
+      <div class="toggle-track" id="mobLangToggle" role="switch" aria-checked="false" tabindex="0">
+        <div class="toggle-knob"></div>
+      </div>
+      <span id="mobLangKn" style="font-weight:600;color:var(--gray);font-family:'Noto Sans Kannada',sans-serif">ಕನ್ನಡ</span>
     </div>
+  </div>
+</nav>
 
-    <div class="modal" id="review-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-review-modal">×</button>
-            <h2>Write a Review</h2>
-            <form id="review-form">
-                <input type="text" name="name" placeholder="Your Name" required>
-                <input type="text" name="location" placeholder="Your Location (City, Country)" required>
-                <div class="star-rating">
-                    <span>Your Rating:</span>
-                    <div class="stars">
-                        <i class="far fa-star" data-rating="1"></i>
-                        <i class="far fa-star" data-rating="2"></i>
-                        <i class="far fa-star" data-rating="3"></i>
-                        <i class="far fa-star" data-rating="4"></i>
-                        <i class="far fa-star" data-rating="5"></i>
-                    </div>
-                    <input type="hidden" name="rating" id="rating-value" required>
-                </div>
-                <textarea name="review" placeholder="Your review (max 200 characters)" maxlength="200" required></textarea>
-                <button type="submit">Submit Review</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="thank-you-message" id="thank-you-message">
-        <p>Thank you! Our team will contact you soon.</p>
-        <button class="btn-primary" id="close-thank-you">OK</button>
-    </div>
-
-    <div class="thank-you-message" id="review-thank-you">
-        <p>Thank you for your valuable feedback!</p>
-        <button class="btn-primary" id="close-review-thank-you">OK</button>
-    </div>
-
-    <div class="modal" id="beginners-guide-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-beginners-modal">×</button>
-            <h2>Beginner's Guide to Trading</h2>
-            <div class="modal-body">
-                <h3>What is Trading?</h3>
-                <p>Trading involves buying and selling financial instruments (like stocks, forex, or cryptocurrencies) with the goal of making a profit from price movements.</p>
-                
-                <h3>Basic Concepts:</h3>
-                <ul>
-                    <li><strong>Market:</strong> Where buyers and sellers exchange assets</li>
-                    <li><strong>Bid/Ask:</strong> The price buyers will pay (bid) vs. what sellers want (ask)</li>
-                    <li><strong>Spread:</strong> Difference between bid and ask prices</li>
-                    <li><strong>Liquidity:</strong> How easily an asset can be bought/sold</li>
-                    <li><strong>Volatility:</strong> How much prices fluctuate over time</li>
-                </ul>
-                
-                <h3>Algorithmic Trading Basics:</h3>
-                <p>Algorithmic trading uses computer programs to execute trades based on predefined rules and strategies. Benefits include:</p>
-                <ul>
-                    <li>Removes emotional decision making</li>
-                    <li>Executes trades at optimal speeds</li>
-                    <li>Can analyze multiple markets simultaneously</li>
-                    <li>Backtests strategies using historical data</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="strategy-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-strategy-modal">×</button>
-            <h2>Chart Pattern Strategies</h2>
-            <div class="modal-body">
-                <h3>Common Chart Patterns:</h3>
-                
-                <div class="pattern">
-                    <h4>1. Head and Shoulders</h4>
-                    <p>A reversal pattern that signals a potential trend change. Features three peaks - the middle one (head) is highest, flanked by two lower peaks (shoulders).</p>
-                    <p><strong>Strategy:</strong> Enter short position when price breaks below the "neckline" with stop-loss above the right shoulder.</p>
-                </div>
-                
-                <div class="pattern">
-                    <h4>2. Double Top/Bottom</h4>
-                    <p>Double Top (bearish reversal) has two peaks at similar highs. Double Bottom (bullish reversal) has two troughs at similar lows.</p>
-                    <p><strong>Strategy:</strong> For Double Top, sell when price breaks below the support level between peaks. For Double Bottom, buy when price breaks above resistance.</p>
-                </div>
-                
-                <div class="pattern">
-                    <h4>3. Triangles (Ascending, Descending, Symmetrical)</h4>
-                    <p>Consolidation patterns where price makes lower highs and higher lows (symmetrical), just lower highs (descending), or just higher lows (ascending).</p>
-                    <p><strong>Strategy:</strong> Trade the breakout in direction of the prevailing trend with stop-loss on the other side of the triangle.</p>
-                </div>
-                
-                <div class="pattern">
-                    <h4>4. Flags and Pennants</h4>
-                    <p>Short-term continuation patterns after strong moves. Flags are small parallelograms, pennants are small symmetrical triangles.</p>
-                    <p><strong>Strategy:</strong> Enter in direction of original trend when price breaks out of pattern, targeting move equal to initial "flagpole".</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="tutorial-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-tutorial-modal">×</button>
-            <h2>Forex Trading Tutorials</h2>
-            <div class="modal-body">
-                <h3>Beginner's Forex Trading Course</h3>
-                <div class="video-container">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/hQs6AYpYxWE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <p>This comprehensive beginner's guide covers forex market basics, terminology, and how to place your first trade.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="faq-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-faq-modal">×</button>
-            <h2>Frequently Asked Questions</h2>
-            <div class="modal-body">
-                <div class="faq-item">
-                    <h3>Q: How much money do I need to start algorithmic trading?</h3>
-                    <p>A: While you can start with as little as $100, we recommend at least $1,000 to properly implement risk management strategies.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>Q: Do I need programming skills to use Orbit Algo?</h3>
-                    <p>A: No, our platform provides pre-built strategies with customizable parameters. Advanced users can access our API for custom development.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>Q: How much time does algorithmic trading require?</h3>
-                    <p>A: After initial setup, the algorithms work autonomously. We recommend checking performance weekly and adjusting strategies monthly.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>Q: What's the success rate of your algorithms?</h3>
-                    <p>A: Our strategies have an average 85% success rate, but past performance doesn't guarantee future results. Proper risk management is essential.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>Q: Can I use Orbit Algo with any broker?</h3>
-                    <p>A: Our platform integrates with most MT5 brokers. We recommend checking our list of verified brokers for optimal performance.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <section id="single-chart" class="single-chart-section">
-        <div class="section-header">
-            <h2>Live Chart</h2>
-            <p>Real-time market data visualization</p>
-        </div>
-        <div class="single-chart-container">
-            <div class="chart-header">
-                <div class="symbol-info">
-                    <i class="fab fa-bitcoin"></i>
-                    <span>Live Chart</span>
-                </div>
-            </div>
-            <div class="chart-timeframe">
-                <button class="timeframe-btn active">1H</button>
-                <button class="timeframe-btn">4H</button>
-                <button class="timeframe-btn">1D</button>
-                <button class="timeframe-btn">1W</button>
-                <button class="timeframe-btn">1M</button>
-            </div>
-            <div class="chart-content" id="btcusd-chart"></div>
-        </div>
-    </section>
-    
-    <section class="features" id="features">
-        <div class="section-header">
-            <h2>Advanced Trading Features</h2>
-            <p>Powerful tools designed for professional traders</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-brain"></i></div>
-                <h3>AI-Powered Algorithms</h3>
-                <p>Adaptive machine learning strategies that optimize trades in real-time based on market conditions.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                <h3>Low-Latency Execution</h3>
-                <p>Execute orders in under 1ms to capitalize on market opportunities instantly.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
-                <h3>Real-Time Analytics</h3>
-                <p>Visualize market trends with advanced charting and performance tracking tools.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Robust Risk Management</h3>
-                <p>Protect your portfolio with automated risk controls and stop-loss mechanisms.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
-                <h3>Cross-Platform Trading</h3>
-                <p>Access your account on web, mobile, or MT5 desktop with seamless synchronization.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-cogs"></i></div>
-                <h3>Customizable Strategies</h3>
-                <p>Create and backtest personalized trading strategies with our API and builder tools.</p>
-            </div>
-        </div>
-    </section>
-    
-    <section class="stats">
-        <div class="stats-container">
-            <div class="stat-item">
-                <h3>99.9%</h3>
-                <p>Uptime Reliability</p>
-            </div>
-            <div class="stat-item">
-                <h3>1.2M+</h3>
-                <p>Trades Executed</p>
-            </div>
-            <div class="stat-item">
-                <h3>0.8ms</h3>
-                <p>Average Execution</p>
-            </div>
-            <div class="stat-item">
-                <h3>42%</h3>
-                <p>Average Annual Returns</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="pricing" id="pricing">
-        <div class="section-header">
-            <h2>Pricing Plans</h2>
-            <p>Choose the perfect plan for your trading needs</p>
-        </div>
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <h3>Basic</h3>
-                <div class="price">$249</div>
-                <div class="per-year">per year</div>
-                <div class="per-month">($20.75/month)</div>
-                <ul>
-                    <li><i class="fas fa-check"></i> Forex Currency Pairs Bot</li>
-                    <li><i class="fas fa-check"></i> AI-Driven Strategies</li>
-                    <li><i class="fas fa-check"></i> MT5 Integration</li>
-                    <li><i class="fas fa-check"></i> Basic Support</li>
-                    <li><i class="fas fa-check"></i> 3-Day Free Trial</li>
-                </ul>
-                <a href="#" class="btn-primary" id="basic-trial-btn">Select Plan</a>
-            </div>
-            <div class="pricing-card">
-                <div class="popular-tag">MOST POPULAR</div>
-                <h3>Gold</h3>
-                <div class="price">$469</div>
-                <div class="per-year">per year</div>
-                <div class="per-month">($39.08/month)</div>
-                <ul>
-                    <li><i class="fas fa-check"></i> XAUUSD & Currency Pairs Bot</li>
-                    <li><i class="fas fa-check"></i> Advanced AI Algorithms</li>
-                    <li><i class="fas fa-check"></i> MT5 Integration</li>
-                    <li><i class="fas fa-check"></i> Priority Support</li>
-                    <li><i class="fas fa-check"></i> 3-Day Free Trial</li>
-                </ul>
-                <a href="#" class="btn-primary" id="gold-trial-btn">Select Plan</a>
-            </div>
-            <div class="pricing-card">
-                <h3>Premium</h3>
-                <div class="price">$689</div>
-                <div class="per-year">per year</div>
-                <div class="per-month">($57.42/month)</div>
-                <ul>
-                    <li><i class="fas fa-check"></i> BTC, XAUUSD & All Pairs Bot</li>
-                    <li><i class="fas fa-check"></i> Full AI Strategy Suite</li>
-                    <li><i class="fas fa-check"></i> MT5 Integration</li>
-                    <li><i class="fas fa-check"></i> 24/7 VIP Support</li>
-                    <li><i class="fas fa-check"></i> 3-Day Free Trial</li>
-                </ul>
-                <a href="#" class="btn-primary" id="premium-trial-btn">Select Plan</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="bot-section" id="bots">
-        <div class="section-header">
-            <h2>Our Trading Bots</h2>
-            <p>Specialized algorithmic solutions for different market instruments</p>
-        </div>
-        <div class="bot-cards">
-            <div class="bot-card">
-                <div class="price-tag">$249/year</div>
-                <h3><i class="fas fa-globe-americas"></i> Forex Bot</h3>
-                <p>Specialized in major currency pairs with advanced trend analysis and pattern recognition.</p>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> EUR/USD, GBP/USD, USD/JPY</li>
-                    <li><i class="fas fa-check-circle"></i> Trend-following strategies</li>
-                    <li><i class="fas fa-check-circle"></i> MACD & Bollinger Bands indicators</li>
-                    <li><i class="fas fa-check-circle"></i> Pattern recognition engine</li>
-                    <li><i class="fas fa-check-circle"></i> Risk management protocols</li>
-                </ul>
-                <a href="#" class="btn-primary" id="forex-trial-btn">Start Free Trial</a>
-            </div>
-            <div class="bot-card">
-                <div class="price-tag">$469/year</div>
-                <h3><i class="fas fa-coins"></i> Gold & Forex Bot</h3>
-                <p>Combines currency pairs with precious metals trading for diversified portfolio.</p>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> XAU/USD (Gold) trading</li>
-                    <li><i class="fas fa-check-circle"></i> All major currency pairs</li>
-                    <li><i class="fas fa-check-circle"></i> RSI & Stochastic oscillators</li>
-                    <li><i class="fas fa-check-circle"></i> Price action analysis</li>
-                    <li><i class="fas fa-check-circle"></i> Volatility-based strategies</li>
-                </ul>
-                <a href="#" class="btn-primary" id="gold-forex-trial-btn">Start Free Trial</a>
-            </div>
-            <div class="bot-card">
-                <div class="price-tag">$689/year</div>
-                <h3><i class="fas fa-chart-line"></i> All Markets Bot</h3>
-                <p>Comprehensive solution for forex, metals, cryptocurrencies and indices.</p>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> BTC/USD cryptocurrency</li>
-                    <li><i class="fas fa-check-circle"></i> XAU/USD (Gold) trading</li>
-                    <li><i class="fas fa-check-circle"></i> All major currency pairs</li>
-                    <li><i class="fas fa-check-circle"></i> Multi-timeframe analysis</li>
-                    <li><i class="fas fa-check-circle"></i> Machine learning optimization</li>
-                </ul>
-                <a href="#" class="btn-primary" id="all-markets-trial-btn">Start Free Trial</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="how-it-works" id="education">
-        <div class="section-header">
-            <h2>Education</h2>
-            <p>Learn the basics of algorithmic trading and advanced strategies.</p>
-        </div>
-        <div class="steps-container">
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <i class="fas fa-book-reader fa-3x" style="color: #00d4ff;"></i>
-                <h4>Beginner's Guide</h4>
-                <p>Start your journey with fundamental concepts of algo trading.</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <i class="fas fa-graduation-cap fa-3x" style="color: #00d4ff;"></i>
-                <h4>Strategy Deep Dive</h4>
-                <p>Explore various trading strategies and how to apply them.</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <i class="fas fa-chalkboard-teacher fa-3x" style="color: #00d4ff;"></i>
-                <h4>Video Tutorials</h4>
-                <p>Watch step-by-step guides on setting up and optimizing bots.</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">4</div>
-                <i class="fas fa-question-circle fa-3x" style="color: #00d4ff;"></i>
-                <h4>FAQ & Support</h4>
-                <p>Find answers to common questions and get expert assistance.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="about-us" id="about">
-        <div class="section-header">
-            <h2>About Us</h2>
-            <p>Discover the legacy and expertise behind Orbit Algo's global trading solutions.</p>
-        </div>
-        <p>Orbit Algo is a globally recognized leader in algorithmic trading, operating internationally across diverse financial markets. With over a decade of experience, our cutting-edge AI-driven platform has consistently delivered a success ratio exceeding 85%, empowering traders worldwide to achieve institutional-grade performance with unparalleled reliability and innovation.</p>
-    </section>
-
-    <section class="reviews-section">
-        <div class="section-header">
-            <h2>Customer Reviews</h2>
-            <p>Hear from traders worldwide who have transformed their portfolios with Orbit Algo.</p>
-        </div>
-        <div class="reviews-wrapper">
-            <button class="scroll-button left" id="scroll-left"><i class="fas fa-chevron-left"></i></button>
-            <div class="reviews-container" id="reviews-container">
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"Orbit Algo offers an average experience. While the AI algorithms are promising, the initial setup required more effort than anticipated."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇮🇳</div>
-                        <div>
-                            <h4>Rajiv Sharma</h4>
-                            <div class="location">Mumbai, India</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"I'm satisfied with the platform's performance, especially the low-latency execution. Further improvements in the UI/UX would enhance the overall trading experience."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇺🇸</div>
-                        <div>
-                            <h4>Michael Anderson</h4>
-                            <div class="location">New York, USA</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"The platform's features are functional, but I've experienced occasional inconsistencies. With some refinements, Orbit Algo has the potential to be a strong contender in the market."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇸🇬</div>
-                        <div>
-                            <h4>Sophia Tan</h4>
-                            <div class="location">Singapore</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"The educational resources helped me understand algorithmic trading from scratch. Now, I'm trading like a pro."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇮🇳</div>
-                        <div>
-                            <h4>Priya Patel</h4>
-                            <div class="location">Ahmedabad, India</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"The cross-platform compatibility allows me to monitor my trades anywhere, anytime. Truly a game-changer."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇬🇧</div>
-                        <div>
-                            <h4>David Wilson</h4>
-                            <div class="location">London, UK</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"Orbit Algo's customer support is exceptional. They guided me through setup and strategy optimization seamlessly."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇦🇪</div>
-                        <div>
-                            <h4>Aisha Khan</h4>
-                            <div class="location">Dubai, UAE</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"The Gold & Forex bot has consistently delivered 25% monthly returns for my portfolio. Worth every penny!"</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇮🇳</div>
-                        <div>
-                            <h4>Vikram Singh</h4>
-                            <div class="location">Bangalore, India</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"As a fund manager, I appreciate the institutional-grade tools. Orbit Algo has become essential to our trading desk."</p>
-                    <div class="reviewer">
-                        <div class="country-flag">🇩🇪</div>
-                        <div>
-                            <h4>Thomas Müller</h4>
-                            <div class="location">Frankfurt, Germany</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-                    <div class="stars" style="margin-bottom: 1rem;">
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <h4 style="font-size: 1.5rem; margin-bottom: 1rem; color: #00d4ff;">Share Your Experience</h4>
-                    <p style="font-style: normal; -webkit-line-clamp: unset; overflow: visible; text-overflow: unset; margin-bottom: 1.5rem;">We value your feedback! Click below to write a review and help us improve.</p>
-                    <a href="#" class="btn-primary" id="write-review-btn" style="padding: 0.8rem 1.5rem; font-size: 0.9rem; text-decoration: none;">Write a Review</a>
-                </div>
-            </div>
-            <button class="scroll-button right" id="scroll-right"><i class="fas fa-chevron-right"></i></button>
-        </div>
-    </section>
-
-    <section class="cta-section" id="contact">
-        <div class="cta-content">
-            <h2>Elevate Your Trading Today</h2>
-            <p>Join thousands of traders leveraging Orbit Algo's AI-driven platform and MT5 integration for unparalleled performance.</p>
-            <div class="hero-buttons">
-                <a href="#" class="btn-primary" id="cta-trial-btn">Start Free Trial</a>
-                <a href="#pricing" class="btn-secondary">Explore Pricing</a>
-            </div>
-            <div class="security-badges">
-                <div class="security-badge">
-                    <i class="fas fa-lock"></i>
-                    <span>256-bit Encryption</span>
-                </div>
-                <div class="security-badge">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Two-Factor Auth</span>
-                </div>
-                <div class="security-badge">
-                    <i class="fas fa-user-shield"></i>
-                    <span>SOC 2 Certified</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="risk-warning">
-        <div class="risk-warning-content">
-            <p><strong>Risk Warning:</strong> Trading in financial markets involves substantial risk of loss and is not suitable for all investors. Past performance is not indicative of future results. OrbitalGo is a technology platform that offers algorithmic tools for educational and automation purposes. We do not provide investment advice, portfolio management services, or execute trades on behalf of users. All trading actions are performed through SEBI-registered brokers via user-authorized APIs. Users are fully responsible for trade decisions, compliance, and associated risks.</p>
-        </div>
-    </section>
-    
-   <!-- In the map-section div, replace the existing address with: -->
-<section class="map-section">
-    <div class="section-header">
-        <h2>Our Offices</h2>
-    </div>
-    <div class="map-container">
-        <div class="map-embed" style="height: 300px;">  <!-- Reduced from 450px -->
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.263318090673!2d78.38197231526842!3d17.44795998804487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93dc8b5b0a33%3A0x8896b1a6ce348f6c!2sHITEC%20City%2C%20Madhapur%2C%20Hyderabad%2C%20Telangana%20500081!5e0!3m2!1sen!2sin!4v1718368000000!5m2!1sen!2sin&markers=color:red%7C17.44796,78.38416" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-        <div class="map-info">
-            <h3>Indian Office</h3>
-            <p><i class="fas fa-map-marker-alt"></i> Unit 702, Building No. 1B<br>Mindspace Madhapur – HUDA Techno Enclave<br>HITEC City, Hyderabad – 500081<br>Telangana, India</p>
-            
-            <h3 style="margin-top: 2rem;">US {Headquarter}</h3>
-            <p><i class="fas fa-map-marker-alt"></i> 1455 3rd Street<br>San Francisco, CA 94158<br>USA</p>
-            
-        
-            <p><i class="fas fa-envelope"></i> contact.support@orbitalgo.co</p>
-            <p><i class="fas fa-clock"></i> Monday - Friday: 9:00 AM - 6:00 PM</p>
-        </div>
-    </div>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-badge" id="heroBadge"><i class="fas fa-map-marker-alt"></i> Mysore's #1 Food Truck Fabricator</div>
+  <div class="hero-heading-wrapper">
+    <h1 id="heroTitle">Build Your Food Business on <span>Wheels.</span></h1>
+  </div>
+  <p class="hero-sub" id="heroSub">
+    From <strong>Auto to Lorries</strong> — we fabricate, refurbish & customize every commercial vehicle into a professional mobile kitchen. 
+    <strong class="highlight">SS 304 steel</strong>. 
+    <strong class="highlight">Ready-made & custom builds</strong>. 
+    <strong class="highlight">Pan-Karnataka delivery</strong>.
+  </p>
+  <div class="hero-btns">
+    <a href="#contact" class="btn-orange" id="heroQuoteBtn"><i class="fas fa-file-alt"></i> Get a Free Quote</a>
+    <a href="[wa.me](https://wa.me/918214009876?text=Hello!%20I%20want%20to%20know%20more%20about%20food%20truck%20fabrication)" class="btn-outline-white" target="_blank" id="heroWhatsappBtn"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n"><span id="stat1">0</span><span class="plus">+</span></div><div class="hstat-l" id="statLabel1">YEARS EXPERIENCE</div></div>
+    <div class="hstat"><div class="hstat-n"><span id="stat2">0</span><span class="plus">+</span></div><div class="hstat-l" id="statLabel2">VEHICLES BUILT</div></div>
+    <div class="hstat"><div class="hstat-n"><span id="stat3">0</span><span class="plus">+</span></div><div class="hstat-l" id="statLabel3">HAPPY CUSTOMERS</div></div>
+    <div class="hstat"><div class="hstat-n"><span id="stat4">0</span><span class="plus">+</span></div><div class="hstat-l" id="statLabel4">CITIES SERVED</div></div>
+  </div>
 </section>
+
+<!-- VEHICLES SECTION -->
+<section class="section vehicles-bg" id="vehicles">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label" id="vehSecLabel">What We Build</div>
+      <h2 class="sec-title" id="vehSecTitle">Every Vehicle, <span>Every Business</span></h2>
+      <p class="sec-sub" id="vehSecSub">From a single auto-rickshaw snack cart to a full lorry restaurant on wheels — we do it all. Ready-made stock available, full custom builds on order.</p>
+    </div>
+    <div class="veh-grid">
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🛺%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3EAuto Rickshaw%3C/text%3E%3C/svg%3E" alt="Auto"></div><h3 id="vehTitle1">Auto Rickshaw</h3><p id="vehDesc1">Perfect for chaat, tea, snacks. Low investment, easy to park anywhere in the city.</p><span class="veh-tag" id="vehTag1">Best for starters</span></div>
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚚%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ETata Ace%3C/text%3E%3C/svg%3E" alt="Tata Ace"></div><h3 id="vehTitle2">Mini Truck (Tata Ace)</h3><p id="vehDesc2">Solo entrepreneurs & small menus. Low maintenance, perfect for city traffic and college areas.</p><span class="veh-tag" id="vehTag2">Most affordable</span></div>
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚛%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3EMid Truck%3C/text%3E%3C/svg%3E" alt="Mid Truck"></div><h3 id="vehTitle3">Mid-Size Truck</h3><p id="vehDesc3">Mahindra, Force Urban — 2-3 cooking stations, ideal for tiffin, biryani, burgers.</p><span class="veh-tag" id="vehTag3">Most popular</span></div>
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚚%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ELarge Lorry%3C/text%3E%3C/svg%3E" alt="Lorry"></div><h3 id="vehTitle4">Large Lorry</h3><p id="vehDesc4">Ashok Leyland, Eicher — full restaurant setup, high volume, ideal for events & wedding catering.</p><span class="veh-tag" id="vehTag4">Max ROI</span></div>
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🏕️%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ETrailer%3C/text%3E%3C/svg%3E" alt="Trailer"></div><h3 id="vehTitle5">Trailer / Caravan</h3><p id="vehDesc5">Stationary or tow-able trailer setups for permanent spots, malls, IT parks, and food courts.</p><span class="veh-tag" id="vehTag5">Premium look</span></div>
+      <div class="veh-card" style="border:2px dashed var(--orange);background:var(--orange-light)"><div class="veh-img" style="background:linear-gradient(135deg,#FFF0E8 0%,#FFE4D4 100%);border-color:rgba(232,98,10,0.2)"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23FFF0E8'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🤔%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23E8620A'%3ENeed Help?%3C/text%3E%3C/svg%3E" alt="Help"></div><h3 id="vehTitle6">Not sure which?</h3><p id="vehDesc6">Tell us your budget, cuisine & city. We'll recommend the right vehicle and guide you from zero.</p><a href="#contact" class="veh-tag" id="vehLink6" style="text-decoration:none;display:inline-block;margin-top:14px;background:var(--orange);color:white">Ask us →</a></div>
+    </div>
+  </div>
 </section>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>Product</h3>
-                <ul class="footer-links">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#bots">Trading Bots</a></li>
-                    <li><a href="#education">Education</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Legal</h3>
-                <ul class="footer-links">
-                    <li><a href="#" id="privacy-policy-link">Privacy Policy</a></li>
-                    <li><a href="#" id="terms-link">Terms of Service</a></li>
-                    <li><a href="#" id="disclaimer-link">Risk Disclosure</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2015-2025 Orbit Algo. All rights reserved. | Advanced Algorithmic Trading Platform</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: rgba(255, 255, 255, 0.4);">
-                Orbit Algo is an educational tool only. Trading involves risk of loss.
-            </p>
-        </div>
-    </footer>
 
-    <div class="modal" id="privacy-policy-modal">
-        <div class="policy-modal-content">
-            <button class="close-modal" id="close-privacy-modal">×</button>
-            <h2>Privacy Policy</h2>
-            <p class="last-updated">Last Updated: January 1, 2025</p>
-            
-            <div class="highlight">
-                <p>This Privacy Policy explains how Orbit Algo ("we", "us", or "our") collects, uses, discloses, and safeguards your information when you use our algorithmic trading platform and related services.</p>
-            </div>
-            
-            <h3>1. Information We Collect</h3>
-            <h4>1.1 Personal Information</h4>
-            <p>When you register for an account or use our services, we may collect:</p>
-            <ul>
-                <li>Full name, email address, phone number, and contact details</li>
-                <li>Payment and billing information for subscription services</li>
-                <li>Government-issued identification for verification purposes when required</li>
-                <li>Demographic information such as age, gender, and occupation for analytics</li>
-            </ul>
-            
-            <h4>1.2 Technical Data</h4>
-            <p>We automatically collect certain technical information including:</p>
-            <ul>
-                <li>IP address, browser type, and device characteristics</li>
-                <li>Operating system and software versions</li>
-                <li>Usage data including pages visited, features used, and time spent</li>
-                <li>Crash reports and performance metrics</li>
-                <li>Cookies and similar tracking technologies (see Section 4)</li>
-            </ul>
-            
-            <h4>1.3 Trading Data</h4>
-            <p>To provide our services, we may process:</p>
-            <ul>
-                <li>MT5 account credentials (stored securely and encrypted)</li>
-                <li>Trading history, positions, and account balances</li>
-                <li>Market data and strategy performance metrics</li>
-                <li>Algorithm configuration and optimization parameters</li>
-            </ul>
-            
-            <h3>2. How We Use Your Information</h3>
-            <p>We use the collected information for the following purposes:</p>
-            <ul>
-                <li><strong>Service Delivery:</strong> To create and manage your account, process payments, and provide customer support</li>
-                <li><strong>Platform Improvement:</strong> To analyze usage patterns and enhance our services</li>
-                <li><strong>Security:</strong> To detect and prevent fraud, abuse, and security incidents</li>
-                <li><strong>Communication:</strong> To send service-related notices, updates, and promotional offers (you may opt-out)</li>
-                <li><strong>Legal Compliance:</strong> To meet regulatory requirements and respond to legal requests</li>
-                <li><strong>Research & Development:</strong> To develop new features and improve algorithm performance</li>
-            </ul>
-            
-            <h3>3. Data Sharing and Disclosure</h3>
-            <h4>3.1 Service Providers</h4>
-            <p>We may share information with third-party vendors who assist with:</p>
-            <ul>
-                <li>Payment processing (Stripe, PayPal)</li>
-                <li>Cloud hosting and infrastructure (AWS, Google Cloud)</li>
-                <li>Analytics and monitoring tools (Google Analytics, Sentry)</li>
-                <li>Customer support and communication platforms (Zendesk, Intercom)</li>
-            </ul>
-            
-            <h4>3.2 Legal Requirements</h4>
-            <p>We may disclose information when required by law or to:</p>
-            <ul>
-                <li>Comply with legal processes or governmental requests</li>
-                <li>Protect our rights, property, or safety</li>
-                <li>Investigate potential violations of our Terms of Service</li>
-                <li>Prevent or address fraud, security, or technical issues</li>
-            </ul>
-            
-            <h4>3.3 Business Transfers</h4>
-            <p>In the event of a merger, acquisition, or asset sale, your information may be transferred as part of the transaction.</p>
-            
-            <h3>4. Cookies and Tracking Technologies</h3>
-            <p>We use cookies and similar technologies to:</p>
-            <ul>
-                <li>Authenticate users and maintain sessions</li>
-                <li>Remember preferences and settings</li>
-                <li>Analyze traffic and usage patterns</li>
-                <li>Deliver targeted advertisements (through third-party services)</li>
-            </ul>
-            <p>You can control cookies through your browser settings, but disabling them may affect functionality.</p>
-            
-            <h3>5. Data Security</h3>
-            <p>We implement robust security measures including:</p>
-            <ul>
-                <li>End-to-end encryption for all data transmissions (TLS 1.2+)</li>
-                <li>Secure storage with AES-256 encryption for sensitive data</li>
-                <li>Regular security audits and penetration testing</li>
-                <li>Multi-factor authentication for administrative access</li>
-                <li>Employee training on data protection best practices</li>
-            </ul>
-            <p>Despite these measures, no system is 100% secure, and we cannot guarantee absolute security.</p>
-            
-            <h3>6. International Data Transfers</h3>
-            <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for these transfers.</p>
-            
-            <h3>7. Your Rights</h3>
-            <p>Depending on your jurisdiction, you may have the right to:</p>
-            <ul>
-                <li>Access and receive a copy of your personal data</li>
-                <li>Request correction of inaccurate or incomplete information</li>
-                <li>Request deletion of your personal data under certain conditions</li>
-                <li>Restrict or object to processing of your data</li>
-                <li>Data portability in a structured, commonly used format</li>
-                <li>Withdraw consent where processing is based on consent</li>
-                <li>Lodge a complaint with a supervisory authority</li>
-            </ul>
-            
-            <h3>8. Data Retention</h3>
-            <p>We retain personal data only as long as necessary for:</p>
-            <ul>
-                <li>Providing services and maintaining your account</li>
-                <li>Complying with legal obligations (e.g., tax records)</li>
-                <li>Resolving disputes and enforcing agreements</li>
-                <li>Legitimate business purposes</li>
-            </ul>
-            <p>Inactive accounts may be deleted after 24 months of inactivity.</p>
-            
-            <h3>9. Children's Privacy</h3>
-            <p>Our services are not directed to individuals under 18. We do not knowingly collect personal information from children.</p>
-            
-            <h3>10. Changes to This Policy</h3>
-            <p>We may update this policy periodically. Material changes will be notified via email or platform notice at least 30 days in advance.</p>
-            
-            <div class="contact-info">
-                <h3>11. Contact Us</h3>
-                <p>For privacy-related inquiries or to exercise your rights, please contact:</p>
-                <p><strong>Data Protection Officer</strong><br>
-                Orbit Algo Ltd.<br>
-                1455 3rd Street San Francisco<br>
-                USA 94158<br>
-                Email: privacy@Orbitalgo.co<br>
-                
-            </div>
+<!-- WHY US -->
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="why-grid">
+      <div class="why-left">
+        <div class="sec-label" id="whySecLabel">Why Choose Us</div>
+        <h2 class="sec-title" id="whySecTitle">Karnataka's <span>Most Trusted</span> Fabricator</h2>
+        <p class="sec-sub" id="whySub" style="margin-bottom:0">For over 15 years, entrepreneurs across Karnataka — from small chaat stalls to large catering businesses — have trusted New Luck Refurbished to build their dreams on wheels.</p>
+        <div class="why-proof">
+          <div class="proof-item" id="proof1"><i class="fas fa-check-circle"></i> <span>Leading fabrication unit in Mysore — state-of-the-art SS 304 steel builds</span></div>
+          <div class="proof-item" id="proof2"><i class="fas fa-check-circle"></i> <span>10,000+ vehicles fabricated across 15+ years</span></div>
+          <div class="proof-item" id="proof3"><i class="fas fa-check-circle"></i> <span>10,000+ happy customers across Karnataka</span></div>
+          <div class="proof-item" id="proof4"><i class="fas fa-check-circle"></i> <span>Delivery to all major cities — Bengaluru, Hubli, Mangaluru, Kalaburagi & more</span></div>
+          <div class="proof-item" id="proof5"><i class="fas fa-check-circle"></i> <span>Both ready-made stock and fully custom fabrication available</span></div>
+          <div class="proof-item" id="proof6"><i class="fas fa-check-circle"></i> <span>We help small entrepreneurs start from scratch — budget guidance included</span></div>
         </div>
+        <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
+          <a href="#contact" class="btn-orange" style="font-size:0.85rem;padding:12px 22px" id="whyQuoteBtn"><i class="fas fa-file-alt"></i> Get Free Quote</a>
+          <a href="[wa.me](https://wa.me/918214009876)" class="btn-outline-white" style="font-size:0.85rem;padding:11px 20px;border-color:#ddd;color:var(--black)" target="_blank" id="whyWhatsappBtn"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp</a>
+        </div>
+      </div>
+      <div class="why-right">
+        <div class="why-box"><i class="fas fa-medal"></i><h4 id="whyBox1Title">15+ Years of Excellence</h4><p id="whyBox1Desc">Founded in 2011. Mysore's oldest and most experienced food truck fabrication unit.</p></div>
+        <div class="why-box"><i class="fas fa-tools"></i><h4 id="whyBox2Title">SS 304 Steel Builds</h4><p id="whyBox2Desc">Food-grade stainless steel kitchen interiors — hygienic, durable, and FSSAI compliant.</p></div>
+        <div class="why-box"><i class="fas fa-paint-brush"></i><h4 id="whyBox3Title">Full Customization</h4><p id="whyBox3Desc">Layout, equipment, wrap design, serving windows — built exactly for your cuisine and brand.</p></div>
+        <div class="why-box"><i class="fas fa-truck"></i><h4 id="whyBox4Title">Pan-Karnataka Delivery</h4><p id="whyBox4Desc">We deliver your finished truck safely to your city — Bengaluru, Mangaluru, Hubli and beyond.</p></div>
+        <div class="why-box"><i class="fas fa-rupee-sign"></i><h4 id="whyBox5Title">Save 60% vs Restaurant</h4><p id="whyBox5Desc">Lower investment, no rent, faster break-even. Most clients recover costs in 12–18 months.</p></div>
+        <div class="why-box"><i class="fas fa-hands-helping"></i><h4 id="whyBox6Title">We Guide You</h4><p id="whyBox6Desc">From vehicle selection to first day of business — we walk every new entrepreneur through the process.</p></div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="modal" id="terms-modal">
-        <div class="policy-modal-content">
-            <button class="close-modal" id="close-terms-modal">×</button>
-            <h2>Terms of Service</h2>
-            <p class="last-updated">Last Updated: January 1, 2025</p>
-            
-            <div class="highlight">
-                <p>These Terms of Service ("Terms") govern your access to and use of Orbit Algo's algorithmic trading platform and related services ("Services"). By accessing or using our Services, you agree to be bound by these Terms.</p>
-            </div>
-            
-            <h3>1. Account Registration</h3>
-            <h4>1.1 Eligibility</h4>
-            <p>To use our Services, you must:</p>
-            <ul>
-                <li>Be at least 18 years old</li>
-                <li>Have legal capacity to enter into binding contracts</li>
-                <li>Not be prohibited from receiving our Services under applicable laws</li>
-                <li>Provide accurate and complete registration information</li>
-            </ul>
-            
-            <h4>1.2 Account Security</h4>
-            <p>You are responsible for:</p>
-            <ul>
-                <li>Maintaining confidentiality of your account credentials</li>
-                <li>All activities that occur under your account</li>
-                <li>Promptly notifying us of any unauthorized access or security breaches</li>
-            </ul>
-            
-            <h3>2. Description of Services</h3>
-            <p>Orbit Algo provides:</p>
-            <ul>
-                <li><strong>Algorithmic Trading Software:</strong> AI-driven trading algorithms for various financial instruments</li>
-                <li><strong>Broker Integration:</strong> Tools for connecting with MT5 brokers</li>
-                <li><strong>Educational Resources:</strong> Market analysis, tutorials, and strategy guides</li>
-                <li><strong>Performance Analytics:</strong> Tools for backtesting and analyzing trading strategies</li>
-            </ul>
-            <p>Our Services are for educational purposes only and do not constitute financial advice.</p>
-            
-            <h3>3. User Responsibilities</h3>
-            <h4>3.1 Acceptable Use</h4>
-            <p>You agree to:</p>
-            <ul>
-                <li>Use Services only for lawful purposes</li>
-                <li>Comply with all applicable laws and regulations</li>
-                <li>Not engage in market manipulation or abusive trading practices</li>
-                <li>Not reverse engineer, decompile, or disassemble our software</li>
-            </ul>
-            
-            <h4>3.2 Prohibited Activities</h4>
-            <p>You may not:</p>
-            <ul>
-                <li>Use our Services to violate any laws or regulations</li>
-                <li>Attempt to gain unauthorized access to our systems</li>
-                <li>Distribute viruses or malicious code</li>
-                <li>Use automated means to access Services without permission</li>
-                <li>Impersonate any person or entity</li>
-            </ul>
-            
-            <h3>4. Intellectual Property</h3>
-            <p>All content, software, and materials provided by Orbit Algo are protected by intellectual property laws. Specifically:</p>
-            <ul>
-                <li>Our algorithms, trading strategies, and software are proprietary</li>
-                <li>You receive a limited, non-exclusive, non-transferable license to use our software</li>
-                <li>You may not copy, modify, distribute, or create derivative works without authorization</li>
-                <li>All trademarks, logos, and service marks are our property</li>
-            </ul>
-            
-            <h3>5. Payments and Billing</h3>
-            <h4>5.1 Subscription Plans</h4>
-            <p>We offer:</p>
-            <ul>
-                <li>Annual subscription plans with automatic renewal</li>
-                <li>3-day free trial period for new users</li>
-                <li>Different tiers with varying features and limits</li>
-            </ul>
-            
-            <h4>5.2 Fees and Charges</h4>
-            <p>You agree to:</p>
-            <ul>
-                <li>Pay all applicable fees for subscribed Services</li>
-                <li>Provide accurate billing information</li>
-                <li>Authorize us to charge your payment method for renewal periods</li>
-            </ul>
-            
-            <h4>5.3 Refund Policy</h4>
-            <p>We offer:</p>
-            <ul>
-                <li>Full refunds within 14 days of initial purchase (excluding trial period)</li>
-                <li>No refunds for partial subscription periods after 14 days</li>
-                <li>Refund requests must be submitted via our support system</li>
-            </ul>
-            
-            <h3>6. Risk Disclosure</h3>
-            <p>Trading financial instruments involves substantial risk:</p>
-            <ul>
-                <li>You may lose more than your initial investment</li>
-                <li>Past performance does not guarantee future results</li>
-                <li>Algorithmic trading carries additional technical risks including system failures</li>
-                <li>Market conditions may change rapidly and unpredictably</li>
-            </ul>
-            <p>You should carefully consider your investment objectives and risk tolerance before trading.</p>
-            
-            <h3>7. Limitation of Liability</h3>
-            <p>To the maximum extent permitted by law:</p>
-            <ul>
-                <li>We shall not be liable for any indirect, incidental, or consequential damages</li>
-                <li>Our total liability for any claims shall not exceed the fees paid by you in the last 12 months</li>
-                <li>We are not responsible for trading losses, broker actions, or market conditions</li>
-                <li>We do not guarantee uninterrupted or error-free operation of our Services</li>
-            </ul>
-            
-            <h3>8. Termination</h3>
-            <h4>8.1 By You</h4>
-            <p>You may cancel your subscription at any time through your account settings. Cancellation will take effect at the end of your current billing period.</p>
-            
-            <h4>8.2 By Us</h4>
-            <p>We may suspend or terminate your account if:</p>
-            <ul>
-                <li>You violate these Terms</li>
-                <li>Required by law or regulatory authority</li>
-                <li>We discontinue the Services</li>
-            </ul>
-            
-            <h3>9. Dispute Resolution</h3>
-            <h4>9.1 Governing Law</h4>
-            <p>These Terms shall be governed by the laws of Singapore, without regard to conflict of law principles.</p>
-            
-            <h4>9.2 Arbitration</h4>
-            <p>Any disputes shall be resolved through binding arbitration in Singapore under the rules of the Singapore International Arbitration Centre.</p>
-            
-            <h3>10. Changes to Terms</h3>
-            <p>We may modify these Terms at any time. Material changes will be notified at least 30 days in advance. Continued use after changes constitutes acceptance.</p>
-            
-            <h3>11. General Provisions</h3>
-            <ul>
-                <li>These Terms constitute the entire agreement between you and Orbit Algo</li>
-                <li>If any provision is found invalid, the remaining provisions remain in effect</li>
-                <li>Our failure to enforce any right does not constitute a waiver</li>
-                <li>You may not assign these Terms without our written consent</li>
-            </ul>
-            
-            <div class="contact-info">
-                <h3>12. Contact Information</h3>
-                <p>For questions about these Terms, please contact:</p>
-                <p><strong>Legal Department</strong><br>
-                Orbit Algo Ltd.<br>
-                1455 3rd Street San Francisco<br>
-                USA CA 94158<br>
-                Email: legal@Orbitalgo.co<br>
-                
-            </div>
-        </div>
+<!-- PROCESS -->
+<section class="section proc-bg" id="process">
+  <div class="wrap">
+    <div class="sec-head centered">
+      <div class="sec-label" style="color:rgba(232,98,10,0.9)" id="procSecLabel">How It Works</div>
+      <h2 class="sec-title" style="color:white" id="procSecTitle">Your Truck, <span>Step by Step</span></h2>
     </div>
-
-    <div class="modal" id="disclaimer-modal">
-        <div class="policy-modal-content">
-            <button class="close-modal" id="close-disclaimer-modal">×</button>
-            <h2>Risk Disclosure Statement</h2>
-            
-            <div class="highlight">
-                <p>This Risk Disclosure Statement outlines the substantial risks involved in algorithmic trading. By using Orbit Algo's services, you acknowledge and accept these risks.</p>
-            </div>
-            
-            <h3>1. General Trading Risks</h3>
-            <p>Trading financial instruments carries inherent risks including:</p>
-            <ul>
-                <li><strong>Market Risk:</strong> Prices may move rapidly and unpredictably due to economic, political, or other factors</li>
-                <li><strong>Leverage Risk:</strong> Using leverage can amplify both gains and losses</li>
-                <li><strong>Liquidity Risk:</strong> Some instruments may become illiquid, making it difficult to exit positions</li>
-                <li><strong>Volatility Risk:</strong> Highly volatile markets may result in significant losses</li>
-            </ul>
-            
-            <h3>2. Algorithmic Trading Specific Risks</h3>
-            <p>Algorithmic trading introduces additional risks:</p>
-            <ul>
-                <li><strong>System Failures:</strong> Technical issues may prevent order execution or cause errors</li>
-                <li><strong>Connectivity Issues:</strong> Internet or broker connection problems may disrupt trading</li>
-                <li><strong>Latency:</strong> Delays in order execution may result in unfavorable prices</li>
-                <li><strong>Over-Optimization:</strong> Strategies may perform well in backtests but fail in live markets</li>
-                <li><strong>Programming Errors:</strong> Bugs in trading algorithms may cause unintended trades</li>
-            </ul>
-            
-            <h3>3. No Investment Advice</h3>
-            <p>Orbit Algo provides educational tools and algorithmic trading software only. We do not:</p>
-            <ul>
-                <li>Provide personalized investment advice or recommendations</li>
-                <li>Guarantee profits or specific performance results</li>
-                <li>Act as your broker or financial advisor</li>
-            </ul>
-            
-            <h3>4. Past Performance</h3>
-            <p>Historical performance results are provided for informational purposes only and have these limitations:</p>
-            <ul>
-                <li>Results may be based on simulated or hypothetical trading</li>
-                <li>They do not account for all market factors that may affect execution</li>
-                <li>They are not indicative of future results or performance</li>
-            </ul>
-            
-            <h3>5. Broker-Related Risks</h3>
-            <p>Orbit Algo is not responsible for:</p>
-            <ul>
-                <li>Execution quality, slippage, or rejections by your broker</li>
-                <li>Funds held with your broker</li>
-                <li>Broker platform outages or technical issues</li>
-                <li>Broker insolvency or regulatory actions against your broker</li>
-            </ul>
-            
-            <h3>6. User Responsibility</h3>
-            <p>By using our services, you acknowledge that:</p>
-            <ul>
-                <li>You understand these risks and are willing to accept them</li>
-                <li>You are solely responsible for all trading decisions</li>
-                <li>You have sufficient knowledge and experience to understand algorithmic trading</li>
-                <li>You have sought independent financial advice if necessary</li>
-            </ul>
-            
-            <h3>7. Recommended Practices</h3>
-            <p>To manage these risks, we recommend:</p>
-            <ul>
-                <li>Starting with small position sizes</li>
-                <li>Testing all strategies thoroughly in demo accounts</li>
-                <li>Implementing appropriate risk management measures</li>
-                <li>Monitoring automated trading systems regularly</li>
-                <li>Maintaining sufficient capital to withstand market fluctuations</li>
-            </ul>
-            
-            <div class="highlight">
-                <p><strong>Warning:</strong> You should only trade with money you can afford to lose. Algorithmic trading may not be suitable for all investors.</p>
-            </div>
-        </div>
+    <div class="proc-grid">
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E📞%3C/text%3E%3C/svg%3E" alt="Call"></div><div class="proc-num">1</div><h4 id="procStep1Title">Tell Us Your Needs</h4><p id="procStep1Desc">Budget, cuisine, vehicle preference, city. Call, WhatsApp, or fill the form — we respond within 2 hours.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🚚%3C/text%3E%3C/svg%3E" alt="Vehicle"></div><div class="proc-num">2</div><h4 id="procStep2Title">Vehicle Selection</h4><p id="procStep2Desc">We recommend the right base vehicle. Don't have one? We help you source a quality used vehicle too.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🔧%3C/text%3E%3C/svg%3E" alt="Fabrication"></div><div class="proc-num">3</div><h4 id="procStep3Title">Custom Fabrication</h4><p id="procStep3Desc">Our Mysore unit strips and rebuilds with SS 304 kitchen, exhaust, electrical, insulation — everything.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🎉%3C/text%3E%3C/svg%3E" alt="Delivery"></div><div class="proc-num">4</div><h4 id="procStep4Title">Final Finish & Delivery</h4><p id="procStep4Desc">Wrap, branding, equipment fitted. Then safely delivered to your city anywhere in Karnataka.</p></div>
     </div>
+  </div>
+</section>
 
-    <script>
-        // Initialize TradingView charts
-        function initializeCharts() {
-            new TradingView.widget({
-                "container_id": "btcusd-chart",
-                "width": "100%",
-                "height": "100%",
-                "symbol": "BITSTAMP:BTCUSD",
-                "interval": "60",
-                "timezone": "Etc/UTC",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "toolbar_bg": "#0f172a",
-                "enable_publishing": false,
-                "hide_side_toolbar": false,
-                "allow_symbol_change": true,
-                "show_popup_button": true,
-                "popup_width": "1000",
-                "popup_height": "650"
-            });
-        }
+<!-- GOOGLE REVIEWS -->
+<section class="section reviews-bg" id="reviews">
+  <div class="wrap">
+    <div class="sec-head centered">
+      <div class="google-badge"><i class="fab fa-google" style="color:#4285F4"></i> <span style="color:#FBB902">★</span> 4.9 / 5 on Google — 1,280+ Reviews</div>
+      <div class="sec-label" id="reviewsSecLabel">Real Customer Reviews</div>
+      <h2 class="sec-title" id="reviewsSecTitle">What Our <span>Customers Say</span></h2>
+    </div>
+    <div class="rev-carousel">
+      <div class="rev-track" id="revTrack">
+        <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"ನ್ಯೂ ಲಕ್ ತಂಡ ನನಗೆ ಸರಿಯಾದ ವಾಹನ ಆಯ್ಕೆ ಮಾಡಲು ಸಹಾಯ ಮಾಡಿದರು. ತಾಟಾ ಏಸ್ ನನ್ನ ಚಾಟ್ ಟ್ರಕ್ ಆಯಿತು — ಗುಣಮಟ್ಟ ಅದ್ಭುತ. ಬೆಂಗಳೂರಿಗೆ ಸಮಯಕ್ಕೆ ಡೆಲಿವರಿ ಆಯಿತು!"</p><div class="rev-author"><div class="rev-avatar">ರಾ</div><div><div class="rev-name">ರಾಜೇಶ್ ಕುಮಾರ್</div><div class="rev-meta"><span class="rev-g-logo">G</span> Google · ಬೆಂಗಳೂರು</div></div></div></div>
+        <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"Best fabrication work I have seen in Karnataka. My biryani truck looks absolutely premium. The SS 304 kitchen is spotless and easy to clean. Delivered to Hubli in perfect condition!"</p><div class="rev-author"><div class="rev-avatar">MA</div><div><div class="rev-name">Mohammed Aslam</div><div class="rev-meta"><span class="rev-g-logo">G</span> Google · Hubli</div></div></div></div>
+        <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"I was a complete beginner. The New Luck team guided me on which vehicle to buy, how much to invest, and what equipment to get. My coffee truck started paying back in just 10 months."</p><div class="rev-author"><div class="rev-avatar">PS</div><div><div class="rev-name">Priya Sharma</div><div class="rev-meta"><span class="rev-g-logo">G</span> Google · Mysore</div></div></div></div>
+        <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"ಮೈಸೂರಿನಲ್ಲಿ ಇನ್ನ್ಯಾರೂ ಈ ಗುಣಮಟ್ಟದಲ್ಲಿ ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ. ನನ್ನ ಲಾರಿ ರೆಸ್ಟೋರೆಂಟ್ ಈಗ ಮ್ಯಾಂಗಳೂರಿನಲ್ಲಿ ಚಾಲಿಸುತ್ತಿದೆ — ಎಲ್ಲರೂ ನೋಡಲು ನಿಲ್ಲುತ್ತಾರೆ!"</p><div class="rev-author"><div class="rev-avatar">ಸ</div><div><div class="rev-name">ಸುರೇಶ್ ನಾಯ್ಕ್</div><div class="rev-meta"><span class="rev-g-logo">G</span> Google · ಮ್ಯಾಂಗಳೂರು</div></div></div></div>
+        <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"Quoted 3x more at another fabricator. New Luck delivered better quality at a very fair price. 14 months later — everything still perfect. This team really cares about small business owners."</p><div class="rev-author"><div class="rev-avatar">KR</div><div><div class="rev-name">Karthik R.</div><div class="rev-meta"><span class="rev-g-logo">G</span> Google · Mangaluru</div></div></div></div>
+        <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"My auto-rickshaw snack cart is so beautifully done — customers actually compliment the design before tasting the food! New Luck team were patient and helped me every step of the way."</p><div class="rev-author"><div class="rev-avatar">LA</div><div><div class="rev-name">Lakshmi Amma</div><div class="rev-meta"><span class="rev-g-logo">G</span> Google · Mysore</div></div></div></div>
+      </div>
+    </div>
+    <div class="rev-controls">
+      <button class="rev-btn" id="revPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+      <div class="rev-dots" id="revDots"></div>
+      <button class="rev-btn" id="revNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
 
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                if (!this.id.includes('trial-btn') && !this.id.includes('get-started-btn') && !this.id.includes('write-review-btn')) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }
-            });
-        });
+<!-- LEAD FORM -->
+<section class="section lead-bg" id="contact">
+  <div class="wrap">
+    <div class="lead-inner">
+      <div class="lead-left">
+        <h2 id="leadTitle">Get Your Free Quote<br>— Today</h2>
+        <p id="leadDesc">Tell us your requirements and our expert will call you back within 2 hours with a detailed quote, vehicle recommendation, and live photos of similar builds.</p>
+        <div class="lead-perks">
+          <div class="lead-perk" id="perk1"><i class="fas fa-check"></i> <span>Free vehicle selection guidance</span></div>
+          <div class="lead-perk" id="perk2"><i class="fas fa-check"></i> <span>Live photos of finished trucks sent to WhatsApp</span></div>
+          <div class="lead-perk" id="perk3"><i class="fas fa-check"></i> <span>No pressure — just honest advice</span></div>
+          <div class="lead-perk" id="perk4"><i class="fas fa-check"></i> <span>Response within 2 hours</span></div>
+          <div class="lead-perk" id="perk5"><i class="fas fa-check"></i> <span>Support in Kannada, Hindi & English</span></div>
+        </div>
+        <div style="margin-top:32px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+          <a href="tel:+918214009876" style="color:white;text-decoration:none;font-size:0.95rem;font-weight:600;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt"></i> +91 821 400 9876</a>
+          <a href="[wa.me](https://wa.me/918214009876)" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:8px;" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+        </div>
+      </div>
+      <div class="lead-form">
+        <h3 id="formTitle">📋 Quick Enquiry Form</h3>
+        <form id="leadForm">
+          <div class="form-row">
+            <div class="fld"><label id="labelName">Your Name *</label><input type="text" id="fname" placeholder="Full name" required></div>
+            <div class="fld"><label id="labelPhone">Phone Number *</label><input type="tel" id="fphone" placeholder="+91 XXXXX XXXXX" required></div>
+          </div>
+          <div class="fld"><label id="labelCity">City / District *</label><input type="text" id="fcity" placeholder="E.g. Bengaluru, Mysore, Hubli..." required></div>
+          <div class="fld"><label id="labelNeed">I Need</label><select id="fneed"><option value="">Select your requirement</option><option>Auto / Tempo food cart setup</option><option>Mini truck (Tata Ace) fabrication</option><option>Mid-size truck fabrication</option><option>Large lorry / full restaurant setup</option><option>Trailer / caravan build</option><option>Ready-made stock — immediate delivery</option><option>I need guidance — not sure yet</option></select></div>
+          <div class="fld"><label id="labelBudget">Budget Range</label><select id="fbudget"><option value="">Select budget (optional)</option><option>Below ₹2 Lakh</option><option>₹2 – 5 Lakh</option><option>₹5 – 8 Lakh</option><option>₹8 – 12 Lakh</option><option>₹12 Lakh+</option></select></div>
+          <div class="fld"><label id="labelMsg">Anything else?</label><textarea id="fmsg" placeholder="Cuisine type, special equipment, preferred vehicle..."></textarea></div>
+          <button type="submit" class="btn-submit-form" id="submitBtn"><i class="fas fa-paper-plane"></i> Send Enquiry — Get Callback in 2 Hours</button>
+        </form>
+        <div id="formMsg"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // Navbar effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 0) {
-                navbar.style.background = 'rgba(15, 15, 26, 0.98)';
-                navbar.style.padding = '0.8rem 0';
-            } else {
-                navbar.style.background = 'rgba(15, 15, 26, 0.95)';
-                navbar.style.padding = '1rem 0';
-            }
-        });
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23E8620A' rx='20'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E🍀%3C/text%3E%3C/svg%3E" alt="Footer Logo" class="footer-logo-img">
+        <div class="footer-brand-name">New Luck Refurbished</div>
+        <div class="footer-brand-sub">Mysore, Karnataka · Est. 2011</div>
+        <div class="footer-brand" id="footerDesc">Karnataka's leading commercial vehicle fabrication unit. Auto to lorry, SS 304 steel kitchens, ready-made & custom builds. 15+ years, 10,000+ happy customers.</div>
+        <div class="socials" style="margin-top:20px">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="[wa.me](https://wa.me/918214009876)" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h5 id="footerNavTitle">Navigate</h5><a href="#home" id="footerHome">Home</a><a href="#vehicles" id="footerVehicles">Our Vehicles</a><a href="#why" id="footerWhy">Why Us</a><a href="#process" id="footerProcess">How It Works</a><a href="#reviews" id="footerReviews">Customer Reviews</a><a href="#contact" id="footerContact">Get a Quote</a></div>
+      <div class="footer-col"><h5 id="footerContactTitle">Contact Us</h5><a href="tel:+918214009876"><i class="fas fa-phone" style="margin-right:8px;color:var(--orange)"></i> +91 821 400 9876</a><a href="[wa.me](https://wa.me/918214009876)" target="_blank"><i class="fab fa-whatsapp" style="margin-right:8px;color:#25D366"></i> WhatsApp</a><a href="mailto:hello@newluckrefurbished.in"><i class="fas fa-envelope" style="margin-right:8px;color:var(--orange)"></i> hello@newluckrefurbished.in</a><a href="#"><i class="fas fa-map-pin" style="margin-right:8px;color:var(--orange)"></i> Hebbal, Mysore – 570016</a><a href="#"><i class="fas fa-clock" style="margin-right:8px;color:var(--orange)"></i> Mon–Sat: 10 AM – 7 PM</a><div style="margin-top:14px;font-size:0.75rem;color:#555" id="footerSupport">Kannada · Hindi · English support</div></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 New Luck Refurbished. All rights reserved.</span><span id="footerTagline">Karnataka's #1 Food Truck Fabricator · 10,000+ vehicles built</span></div>
+  </div>
+</footer>
 
-        // Currency symbols
-        function createCurrencySymbols() {
-            const heroSection = document.querySelector('.hero');
-            const currencies = ['$', '€', '£', '¥', '₿'];
-            const symbolCount = 20;
+<a href="[wa.me](https://wa.me/918214009876?text=ನಮಸ್ಕಾರ!%20ನನಗೆ%20ಫುಡ್%20ಟ್ರಕ್%20ಬಗ್ಗೆ%20ಮಾಹಿತಿ%20ಬೇಕು)" class="wa-float" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<div class="wa-float-label" id="waLabel">Chat with us in Kannada!</div>
 
-            for (let i = 0; i < symbolCount; i++) {
-                const symbol = document.createElement('div');
-                symbol.classList.add('currency-symbol');
-                symbol.textContent = currencies[Math.floor(Math.random() * currencies.length)];
-                symbol.style.top = `${Math.random() * 100}%`;
-                symbol.style.left = `${Math.random() * 100}%`;
-                symbol.style.fontSize = `${Math.random() * 1 + 1}rem`;
-                symbol.style.animationDuration = `${Math.random() * 10 + 10}s`;
-                symbol.style.animationDelay = `${Math.random() * 5}s`;
-                setTimeout(() => symbol.classList.add('visible'), 100);
-                heroSection.appendChild(symbol);
-            }
-        }
-
-        // Timeframe buttons
-        document.querySelectorAll('.timeframe-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                this.parentElement.querySelectorAll('.timeframe-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                this.classList.add('active');
-                const symbol = this.closest('.single-chart-container').querySelector('.symbol-info span').textContent;
-                const timeframe = this.textContent;
-                console.log(`Changing ${symbol} chart to ${timeframe} timeframe`);
-            });
-        });
-
-        // Toggle menu
-        const toggleButton = document.getElementById('toggle-button');
-        const navLinks = document.getElementById('nav-links');
-        const navLinksItems = document.querySelectorAll('.nav-links li');
-
-        toggleButton.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            
-            // Toggle between hamburger and close icon
-            const icon = toggleButton.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-            
-            // Animate nav items
-            navLinksItems.forEach((item, index) => {
-                if (navLinks.classList.contains('active')) {
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-                    item.style.transitionDelay = `${0.1 + (index * 0.1)}s`;
-                } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateY(20px)';
-                    item.style.transitionDelay = '0s';
-                }
-            });
-        });
-
-        // Close mobile menu when clicking a link
-        navLinksItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                toggleButton.querySelector('i').classList.remove('fa-times');
-                toggleButton.querySelector('i').classList.add('fa-bars');
-                
-                navLinksItems.forEach(item => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateY(20px)';
-                });
-            });
-        });
-
-        // Modal handling
-        const trialModal = document.getElementById('trial-modal');
-        const getStartedModal = document.getElementById('get-started-modal');
-        const reviewModal = document.getElementById('review-modal');
-        const thankYouMessage = document.getElementById('thank-you-message');
-        const reviewThankYou = document.getElementById('review-thank-you');
-        const trialForm = document.getElementById('trial-form');
-        const getStartedForm = document.getElementById('get-started-form');
-        const reviewForm = document.getElementById('review-form');
-        const disclaimerModal = document.getElementById('disclaimer-modal');
-        const privacyModal = document.getElementById('privacy-policy-modal');
-        const termsModal = document.getElementById('terms-modal');
-        
-        // Education modals
-        const beginnersModal = document.getElementById('beginners-guide-modal');
-        const strategyModal = document.getElementById('strategy-modal');
-        const tutorialModal = document.getElementById('tutorial-modal');
-        const faqModal = document.getElementById('faq-modal');
-
-        // Open trial modal
-        document.querySelectorAll('#start-trial-btn, #basic-trial-btn, #gold-trial-btn, #premium-trial-btn, #forex-trial-btn, #gold-forex-trial-btn, #all-markets-trial-btn, #cta-trial-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                trialModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        // Open get started modal
-        document.getElementById('get-started-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            getStartedModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        // Open review modal
-        document.getElementById('write-review-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            reviewModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        // Open education modals
-        document.querySelector('.step-card:nth-child(1)').addEventListener('click', () => {
-            beginnersModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        document.querySelector('.step-card:nth-child(2)').addEventListener('click', () => {
-            strategyModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        document.querySelector('.step-card:nth-child(3)').addEventListener('click', () => {
-            tutorialModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        document.querySelector('.step-card:nth-child(4)').addEventListener('click', () => {
-            faqModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        // Open legal modals
-        document.getElementById('privacy-policy-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            privacyModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        document.getElementById('terms-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            termsModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        document.getElementById('disclaimer-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            disclaimerModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        // Close modals
-        document.getElementById('close-trial-modal').addEventListener('click', () => {
-            trialModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-get-started-modal').addEventListener('click', () => {
-            getStartedModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-review-modal').addEventListener('click', () => {
-            reviewModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-beginners-modal').addEventListener('click', () => {
-            beginnersModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        document.getElementById('close-strategy-modal').addEventListener('click', () => {
-            strategyModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        document.getElementById('close-tutorial-modal').addEventListener('click', () => {
-            tutorialModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        document.getElementById('close-faq-modal').addEventListener('click', () => {
-            faqModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-disclaimer-modal').addEventListener('click', () => {
-            disclaimerModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-privacy-modal').addEventListener('click', () => {
-            privacyModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-terms-modal').addEventListener('click', () => {
-            termsModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-thank-you').addEventListener('click', () => {
-            thankYouMessage.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('close-review-thank-you').addEventListener('click', () => {
-            reviewThankYou.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    modal.style.display = 'none';
-                });
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // Handle form submissions
-        trialForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(trialForm);
-            console.log({
-                name: formData.get('name'),
-                mobile: formData.get('mobile'),
-                mt5_id: formData.get('mt5-id'),
-                mt5_password: formData.get('mt5-password'),
-                mt5_server: formData.get('mt5-server')
-            });
-            trialModal.style.display = 'none';
-            thankYouMessage.style.display = 'block';
-            trialForm.reset();
-            setTimeout(() => {
-                thankYouMessage.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 3000);
-        });
-
-        getStartedForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(getStartedForm);
-            console.log({
-                name: formData.get('name'),
-                email: formData.get('email'),
-                mobile: formData.get('mobile')
-            });
-            getStartedModal.style.display = 'none';
-            thankYouMessage.style.display = 'block';
-            getStartedForm.reset();
-            setTimeout(() => {
-                thankYouMessage.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 3000);
-        });
-
-        // Star rating functionality
-        document.querySelectorAll('.star-rating .stars i').forEach(star => {
-            star.addEventListener('click', function() {
-                const rating = parseInt(this.getAttribute('data-rating'));
-                const stars = this.parentElement.querySelectorAll('i');
-                
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.remove('far');
-                        s.classList.add('fas');
-                    } else {
-                        s.classList.remove('fas');
-                        s.classList.add('far');
-                    }
-                });
-                
-                document.getElementById('rating-value').value = rating;
-            });
-        });
-
-        // Handle review form submission
-        reviewForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(reviewForm);
-            
-            // In a real application, you would send this data to your server
-            console.log({
-                name: formData.get('name'),
-                location: formData.get('location'),
-                rating: formData.get('rating'),
-                review: formData.get('review')
-            });
-            
-            reviewModal.style.display = 'none';
-            reviewThankYou.style.display = 'block';
-            reviewForm.reset();
-            
-            // Reset stars
-            document.querySelectorAll('.star-rating .stars i').forEach(star => {
-                star.classList.remove('fas');
-                star.classList.add('far');
-            });
-            
-            setTimeout(() => {
-                reviewThankYou.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 3000);
-        });
-
-        // Review carousel scrolling
-        const reviewsContainer = document.getElementById('reviews-container');
-        const scrollLeftBtn = document.getElementById('scroll-left');
-        const scrollRightBtn = document.getElementById('scroll-right');
-
-        scrollLeftBtn.addEventListener('click', () => {
-            const cardWidth = reviewsContainer.querySelector('.review-card').offsetWidth + 32; // card width + gap (2rem = 32px)
-            reviewsContainer.scrollBy({
-                left: -cardWidth,
-                behavior: 'smooth'
-            });
-        });
-
-        scrollRightBtn.addEventListener('click', () => {
-            const cardWidth = reviewsContainer.querySelector('.review-card').offsetWidth + 32; // card width + gap (2rem = 32px)
-            reviewsContainer.scrollBy({
-                left: cardWidth,
-                behavior: 'smooth'
-            });
-        });
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            createCurrencySymbols();
-            initializeCharts();
-            document.querySelectorAll('.feature-card, .pricing-card, .bot-card, .review-card').forEach((card, index) => {
-                card.style.animation = `fadeInUp 1s ease ${index * 0.1}s both`;
-            });
-        });
-
-        // Keyboard escape to close modals
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    modal.style.display = 'none';
-                });
-                document.body.style.overflow = 'auto';
-            }
-        });
-    </script>
 <script>
-const BASE = "https://mangosb-backend.onrender.com";
+// Translation Dictionary
+const T = {
+  en: {
+    navHome: "Home", navVehicles: "Vehicles", navWhy: "Why Us", navProcess: "Process", navReviews: "Reviews", navContact: "Contact",
+    navCta: "Get Free Quote",
+    mobHome: "Home", mobVehicles: "Our Vehicles", mobWhy: "Why Us", mobProcess: "Process", mobReviews: "Reviews", mobContact: "📞 Get Free Quote",
+    heroBadge: "Mysore's #1 Food Truck Fabricator",
+    heroTitle: "Build Your Food Business on <span>Wheels.</span>",
+    heroSub: 'From <strong>Auto to Lorries</strong> — we fabricate, refurbish & customize every commercial vehicle into a professional mobile kitchen. <strong class="highlight">SS 304 steel</strong>. <strong class="highlight">Ready-made & custom builds</strong>. <strong class="highlight">Pan-Karnataka delivery</strong>.',
+    heroQuoteBtn: "Get a Free Quote", heroWhatsappBtn: "WhatsApp Us",
+    statLabel1: "YEARS EXPERIENCE", statLabel2: "VEHICLES BUILT", statLabel3: "HAPPY CUSTOMERS", statLabel4: "CITIES SERVED",
+    vehSecLabel: "What We Build", vehSecTitle: "Every Vehicle, <span>Every Business</span>",
+    vehSecSub: "From a single auto-rickshaw snack cart to a full lorry restaurant on wheels — we do it all. Ready-made stock available, full custom builds on order.",
+    vehTitle1: "Auto Rickshaw", vehDesc1: "Perfect for chaat, tea, snacks. Low investment, easy to park anywhere in the city.", vehTag1: "Best for starters",
+    vehTitle2: "Mini Truck (Tata Ace)", vehDesc2: "Solo entrepreneurs & small menus. Low maintenance, perfect for city traffic and college areas.", vehTag2: "Most affordable",
+    vehTitle3: "Mid-Size Truck", vehDesc3: "Mahindra, Force Urban — 2-3 cooking stations, ideal for tiffin, biryani, burgers.", vehTag3: "Most popular",
+    vehTitle4: "Large Lorry", vehDesc4: "Ashok Leyland, Eicher — full restaurant setup, high volume, ideal for events & wedding catering.", vehTag4: "Max ROI",
+    vehTitle5: "Trailer / Caravan", vehDesc5: "Stationary or tow-able trailer setups for permanent spots, malls, IT parks, and food courts.", vehTag5: "Premium look",
+    vehTitle6: "Not sure which?", vehDesc6: "Tell us your budget, cuisine & city. We'll recommend the right vehicle and guide you from zero.", vehLink6: "Ask us →",
+    whySecLabel: "Why Choose Us", whySecTitle: "Karnataka's <span>Most Trusted</span> Fabricator",
+    whySub: "For over 15 years, entrepreneurs across Karnataka — from small chaat stalls to large catering businesses — have trusted New Luck Refurbished to build their dreams on wheels.",
+    proof1: "Leading fabrication unit in Mysore — state-of-the-art SS 304 steel builds",
+    proof2: "10,000+ vehicles fabricated across 15+ years",
+    proof3: "10,000+ happy customers across Karnataka",
+    proof4: "Delivery to all major cities — Bengaluru, Hubli, Mangaluru, Kalaburagi & more",
+    proof5: "Both ready-made stock and fully custom fabrication available",
+    proof6: "We help small entrepreneurs start from scratch — budget guidance included",
+    whyQuoteBtn: "Get Free Quote", whyWhatsappBtn: "WhatsApp",
+    whyBox1Title: "15+ Years of Excellence", whyBox1Desc: "Founded in 2011. Mysore's oldest and most experienced food truck fabrication unit.",
+    whyBox2Title: "SS 304 Steel Builds", whyBox2Desc: "Food-grade stainless steel kitchen interiors — hygienic, durable, and FSSAI compliant.",
+    whyBox3Title: "Full Customization", whyBox3Desc: "Layout, equipment, wrap design, serving windows — built exactly for your cuisine and brand.",
+    whyBox4Title: "Pan-Karnataka Delivery", whyBox4Desc: "We deliver your finished truck safely to your city — Bengaluru, Mangaluru, Hubli and beyond.",
+    whyBox5Title: "Save 60% vs Restaurant", whyBox5Desc: "Lower investment, no rent, faster break-even. Most clients recover costs in 12–18 months.",
+    whyBox6Title: "We Guide You", whyBox6Desc: "From vehicle selection to first day of business — we walk every new entrepreneur through the process.",
+    procSecLabel: "How It Works", procSecTitle: "Your Truck, <span>Step by Step</span>",
+    procStep1Title: "Tell Us Your Needs", procStep1Desc: "Budget, cuisine, vehicle preference, city. Call, WhatsApp, or fill the form — we respond within 2 hours.",
+    procStep2Title: "Vehicle Selection", procStep2Desc: "We recommend the right base vehicle. Don't have one? We help you source a quality used vehicle too.",
+    procStep3Title: "Custom Fabrication", procStep3Desc: "Our Mysore unit strips and rebuilds with SS 304 kitchen, exhaust, electrical, insulation — everything.",
+    procStep4Title: "Final Finish & Delivery", procStep4Desc: "Wrap, branding, equipment fitted. Then safely delivered to your city anywhere in Karnataka.",
+    reviewsSecLabel: "Real Customer Reviews", reviewsSecTitle: "What Our <span>Customers Say</span>",
+    leadTitle: "Get Your Free Quote<br>— Today",
+    leadDesc: "Tell us your requirements and our expert will call you back within 2 hours with a detailed quote, vehicle recommendation, and live photos of similar builds.",
+    perk1: "Free vehicle selection guidance", perk2: "Live photos of finished trucks sent to WhatsApp", perk3: "No pressure — just honest advice", perk4: "Response within 2 hours", perk5: "Support in Kannada, Hindi & English",
+    formTitle: "📋 Quick Enquiry Form",
+    labelName: "Your Name *", labelPhone: "Phone Number *", labelCity: "City / District *", labelNeed: "I Need", labelBudget: "Budget Range", labelMsg: "Anything else?",
+    submitBtn: "Send Enquiry — Get Callback in 2 Hours",
+    footerDesc: "Karnataka's leading commercial vehicle fabrication unit. Auto to lorry, SS 304 steel kitchens, ready-made & custom builds. 15+ years, 10,000+ happy customers.",
+    footerNavTitle: "Navigate", footerHome: "Home", footerVehicles: "Our Vehicles", footerWhy: "Why Us", footerProcess: "How It Works", footerReviews: "Customer Reviews", footerContact: "Get a Quote",
+    footerContactTitle: "Contact Us", footerSupport: "Kannada · Hindi · English support", footerTagline: "Karnataka's #1 Food Truck Fabricator · 10,000+ vehicles built",
+    waLabel: "Chat with us in Kannada!"
+  },
+  kn: {
+    navHome: "ಮುಖಪುಟ", navVehicles: "ವಾಹನಗಳು", navWhy: "ಏಕೆ ನಾವು", navProcess: "ಪ್ರಕ್ರಿಯೆ", navReviews: "ಅಭಿಪ್ರಾಯ", navContact: "ಸಂಪರ್ಕ",
+    navCta: "ಉಚಿತ ಉಲ್ಲೇಖ",
+    mobHome: "ಮುಖಪುಟ", mobVehicles: "ನಮ್ಮ ವಾಹನಗಳು", mobWhy: "ಏಕೆ ನಾವು", mobProcess: "ಪ್ರಕ್ರಿಯೆ", mobReviews: "ಅಭಿಪ್ರಾಯ", mobContact: "📞 ಉಚಿತ ಉಲ್ಲೇಖ",
+    heroBadge: "ಮೈಸೂರಿನ #1 ಫುಡ್ ಟ್ರಕ್ ನಿರ್ಮಾಪಕ",
+    heroTitle: "ಚಕ್ರಗಳ ಮೇಲೆ ನಿಮ್ಮ <span>ಆಹಾರ ವ್ಯವಹಾರ</span> ನಿರ್ಮಿಸಿ.",
+    heroSub: '<strong>ಆಟೋದಿಂದ ಲಾರಿಯವರೆಗೆ</strong> — ನಾವು ಪ್ರತಿ ವಾಣಿಜ್ಯ ವಾಹನವನ್ನು ವೃತ್ತಿಪರ ಮೊಬೈಲ್ ಕಿಚನ್ ಆಗಿ ನಿರ್ಮಿಸುತ್ತೇವೆ. <strong class="highlight">SS 304 ಉಕ್ಕು</strong>. <strong class="highlight">ರೆಡಿಮೇಡ್ ಮತ್ತು ಕಸ್ಟಮ್</strong>. <strong class="highlight">ಕರ್ನಾಟಕಾದ್ಯಂತ ಡೆಲಿವರಿ</strong>.',
+    heroQuoteBtn: "ಉಚಿತ ಉಲ್ಲೇಖ ಪಡೆಯಿರಿ", heroWhatsappBtn: "ವಾಟ್ಸಾಪ್ ಮಾಡಿ",
+    statLabel1: "ವರ್ಷಗಳ ಅನುಭವ", statLabel2: "ನಿರ್ಮಿತ ವಾಹನಗಳು", statLabel3: "ಸಂತೃಪ್ತ ಗ್ರಾಹಕರು", statLabel4: "ಸೇವಿಸಿದ ನಗರಗಳು",
+    vehSecLabel: "ನಾವು ಏನನ್ನು ನಿರ್ಮಿಸುತ್ತೇವೆ", vehSecTitle: "ಪ್ರತಿ ವಾಹನ, <span>ಪ್ರತಿ ವ್ಯವಹಾರ</span>",
+    vehSecSub: "ಸಿಂಗಲ್ ಆಟೋ ಸ್ನ್ಯಾಕ್ ಕಾರ್ಟ್ನಿಂದ ಪೂರ್ಣ ಲಾರಿ ರೆಸ್ಟೋರೆಂಟ್ವರೆಗೆ — ನಾವು ಎಲ್ಲವನ್ನೂ ಮಾಡುತ್ತೇವೆ. ರೆಡಿಮೇಡ್ ಸ್ಟಾಕ್ ಲಭ್ಯ.",
+    vehTitle1: "ಆಟೋ ರಿಕ್ಷಾ", vehDesc1: "ಚಾಟ್, ಚಹಾ, ತಿಂಡಿಗಳಿಗೆ ಪರಿಪೂರ್ಣ. ಕಡಿಮೆ ಹೂಡಿಕೆ, ಸುಲಭ ಪಾರ್ಕಿಂಗ್.", vehTag1: "ಆರಂಭಿಕರಿಗೆ ಉತ್ತಮ",
+    vehTitle2: "ಮಿನಿ ಟ್ರಕ್ (ಟಾಟಾ ಏಸ್)", vehDesc2: "ಏಕವ್ಯಕ್ತಿ ಉದ್ಯಮಿಗಳಿಗೆ. ಕಡಿಮೆ ನಿರ್ವಹಣೆ, ಕಾಲೇಜು ಪ್ರದೇಶಗಳಿಗೆ ಸೂಕ್ತ.", vehTag2: "ಅತ್ಯಂತ ಕೈಗೆಟುಕುವ",
+    vehTitle3: "ಮಧ್ಯಮ ಗಾತ್ರದ ಟ್ರಕ್", vehDesc3: "ಮಹೀಂದ್ರ, ಫೋರ್ಸ್ — 2-3 ಅಡುಗೆ ಕೇಂದ್ರಗಳು, ಟಿಫಿನ್, ಬಿರಿಯಾನಿಗೆ ಸೂಕ್ತ.", vehTag3: "ಜನಪ್ರಿಯ",
+    vehTitle4: "ದೊಡ್ಡ ಲಾರಿ", vehDesc4: "ಅಶೋಕ್ ಲೇಲ್ಯಾಂಡ್, ಐಚರ್ — ಸಂಪೂರ್ಣ ರೆಸ್ಟೋರೆಂಟ್, ಕಾರ್ಯಕ್ರಮಗಳಿಗೆ ಸೂಕ್ತ.", vehTag4: "ಗರಿಷ್ಠ ROI",
+    vehTitle5: "ಟ್ರೈಲರ್ / ಕ್ಯಾರವಾನ್", vehDesc5: "ಶಾಶ್ವತ ಸ್ಥಳಗಳು, ಮಾಲ್ಗಳು, ಐಟಿ ಪಾರ್ಕ್ಗಳಿಗೆ ಸ್ಥಾಯಿ ಸೆಟಪ್ಗಳು.", vehTag5: "ಪ್ರೀಮಿಯಂ ನೋಟ",
+    vehTitle6: "ಯಾವುದು ಸರಿ ಗೊತ್ತಿಲ್ಲ?", vehDesc6: "ನಿಮ್ಮ ಬಜೆಟ್, ಪಾಕಪದ್ಧತಿ, ನಗರ ತಿಳಿಸಿ. ನಾವು ಸರಿಯಾದ ವಾಹನ ಶಿಫಾರಸು ಮಾಡುತ್ತೇವೆ.", vehLink6: "ನಮ್ಮನ್ನು ಕೇಳಿ →",
+    whySecLabel: "ಏಕೆ ನಮ್ಮನ್ನು ಆಯ್ಕೆ ಮಾಡಿ", whySecTitle: "ಕರ್ನಾಟಕದ <span>ಅತ್ಯಂತ ವಿಶ್ವಾಸಾರ್ಹ</span> ನಿರ್ಮಾಪಕ",
+    whySub: "15 ವರ್ಷಗಳಿಂದ, ಕರ್ನಾಟಕದಾದ್ಯಂತದ ಉದ್ಯಮಿಗಳು ನ್ಯೂ ಲಕ್ ರಿಫರ್ಬಿಶ್ಡ್ ಅನ್ನು ತಮ್ಮ ಕನಸುಗಳನ್ನು ನಿರ್ಮಿಸಲು ನಂಬಿದ್ದಾರೆ.",
+    proof1: "ಮೈಸೂರಿನ ಪ್ರಮುಖ ನಿರ್ಮಾಣ ಘಟಕ — SS 304 ಸ್ಟೀಲ್ ಬಿಲ್ಡ್ಗಳು",
+    proof2: "15+ ವರ್ಷಗಳಲ್ಲಿ 10,000+ ವಾಹನಗಳನ್ನು ನಿರ್ಮಿಸಲಾಗಿದೆ",
+    proof3: "ಕರ್ನಾಟಕದಾದ್ಯಂತ 10,000+ ಸಂತೃಪ್ತ ಗ್ರಾಹಕರು",
+    proof4: "ಬೆಂಗಳೂರು, ಹುಬ್ಬಳ್ಳಿ, ಮಂಗಳೂರು, ಕಲಬುರಗಿಗೆ ಡೆಲಿವರಿ",
+    proof5: "ರೆಡಿಮೇಡ್ ಮತ್ತು ಕಸ್ಟಮ್ ನಿರ್ಮಾಣ ಎರಡೂ ಲಭ್ಯ",
+    proof6: "ಸಣ್ಣ ಉದ್ಯಮಿಗಳಿಗೆ ಮೊದಲಿನಿಂದ ಸಹಾಯ — ಬಜೆಟ್ ಮಾರ್ಗದರ್ಶನ",
+    whyQuoteBtn: "ಉಚಿತ ಉಲ್ಲೇಖ", whyWhatsappBtn: "ವಾಟ್ಸಾಪ್",
+    whyBox1Title: "15+ ವರ್ಷಗಳ ಶ್ರೇಷ್ಠತೆ", whyBox1Desc: "2011 ರಲ್ಲಿ ಸ್ಥಾಪಿಸಲಾಯಿತು. ಮೈಸೂರಿನ ಅತ್ಯಂತ ಅನುಭವಿ ಫುಡ್ ಟ್ರಕ್ ಘಟಕ.",
+    whyBox2Title: "SS 304 ಸ್ಟೀಲ್ ಬಿಲ್ಡ್ಗಳು", whyBox2Desc: "ಆಹಾರ-ದರ್ಜೆಯ ಸ್ಟೇನ್ಲೆಸ್ ಸ್ಟೀಲ್ — ನೈರ್ಮಲ್ಯ, FSSAI ಅನುಸರಣೆ.",
+    whyBox3Title: "ಸಂಪೂರ್ಣ ಕಸ್ಟಮೈಸೇಶನ್", whyBox3Desc: "ಲೇಔಟ್, ಉಪಕರಣ, ವಿನ್ಯಾಸ — ನಿಮ್ಮ ಬ್ರ್ಯಾಂಡ್ಗೆ ನಿಖರವಾಗಿ.",
+    whyBox4Title: "ಕರ್ನಾಟಕಾದ್ಯಂತ ಡೆಲಿವರಿ", whyBox4Desc: "ಬೆಂಗಳೂರು, ಮಂಗಳೂರು, ಹುಬ್ಬಳ್ಳಿ ಮತ್ತು ಅದರಾಚೆ ಸುರಕ್ಷಿತ ಡೆಲಿವರಿ.",
+    whyBox5Title: "ರೆಸ್ಟೋರೆಂಟ್ಗೆ ಹೋಲಿಸಿದರೆ 60% ಉಳಿತಾಯ", whyBox5Desc: "ಕಡಿಮೆ ಹೂಡಿಕೆ, ಬಾಡಿಗೆ ಇಲ್ಲ. 12-18 ತಿಂಗಳಲ್ಲಿ ವೆಚ್ಚ ವಾಪಸ್.",
+    whyBox6Title: "ನಾವು ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತೇವೆ", whyBox6Desc: "ವಾಹನ ಆಯ್ಕೆಯಿಂದ ವ್ಯಾಪಾರದ ಮೊದಲ ದಿನದವರೆಗೆ ಸಹಾಯ.",
+    procSecLabel: "ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ", procSecTitle: "ನಿಮ್ಮ ಟ್ರಕ್, <span>ಹಂತ ಹಂತವಾಗಿ</span>",
+    procStep1Title: "ನಿಮ್ಮ ಅಗತ್ಯ ತಿಳಿಸಿ", procStep1Desc: "ಬಜೆಟ್, ಪಾಕಪದ್ಧತಿ, ವಾಹನ, ನಗರ. ಕರೆ/ವಾಟ್ಸಾಪ್ — 2 ಗಂಟೆಯಲ್ಲಿ ಉತ್ತರ.",
+    procStep2Title: "ವಾಹನ ಆಯ್ಕೆ", procStep2Desc: "ಸರಿಯಾದ ವಾಹನ ಶಿಫಾರಸು. ಇಲ್ಲದಿದ್ದರೆ ಬಳಸಿದ ವಾಹನ ಪಡೆಯಲು ಸಹಾಯ.",
+    procStep3Title: "ಕಸ್ಟಮ್ ನಿರ್ಮಾಣ", procStep3Desc: "SS 304 ಕಿಚನ್, ಎಕ್ಸಾಸ್ಟ್, ಎಲೆಕ್ಟ್ರಿಕಲ್, ಇನ್ಸುಲೇಶನ್ — ಎಲ್ಲವೂ.",
+    procStep4Title: "ಮುಕ್ತಾಯ ಮತ್ತು ಡೆಲಿವರಿ", procStep4Desc: "ರ್ಯಾಪ್, ಬ್ರ್ಯಾಂಡಿಂಗ್, ಉಪಕರಣ. ಕರ್ನಾಟಕದಲ್ಲಿ ಎಲ್ಲಿಯಾದರೂ ಸುರಕ್ಷಿತ ಡೆಲಿವರಿ.",
+    reviewsSecLabel: "ನೈಜ ಗ್ರಾಹಕ ಅಭಿಪ್ರಾಯ", reviewsSecTitle: "ನಮ್ಮ <span>ಗ್ರಾಹಕರು ಹೇಳುತ್ತಾರೆ</span>",
+    leadTitle: "ನಿಮ್ಮ ಉಚಿತ ಉಲ್ಲೇಖ<br>— ಇಂದು ಪಡೆಯಿರಿ",
+    leadDesc: "ನಿಮ್ಮ ಅವಶ್ಯಕತೆ ತಿಳಿಸಿ. 2 ಗಂಟೆಯಲ್ಲಿ ವಿವರವಾದ ಉಲ್ಲೇಖ, ವಾಹನ ಶಿಫಾರಸು ಮತ್ತು ಫೋಟೋಗಳೊಂದಿಗೆ ಕರೆ.",
+    perk1: "ಉಚಿತ ವಾಹನ ಆಯ್ಕೆ ಮಾರ್ಗದರ್ಶನ", perk2: "ಸಿದ್ಧ ಟ್ರಕ್ಗಳ ಫೋಟೋ ವಾಟ್ಸಾಪ್ಗೆ", perk3: "ಒತ್ತಡವಿಲ್ಲ — ಪ್ರಾಮಾಣಿಕ ಸಲಹೆ", perk4: "2 ಗಂಟೆಯಲ್ಲಿ ಪ್ರತಿಕ್ರಿಯೆ", perk5: "ಕನ್ನಡ, ಹಿಂದಿ, ಇಂಗ್ಲಿಷ್ ಸಹಾಯ",
+    formTitle: "📋 ತ್ವರಿತ ವಿಚಾರಣೆ ಫಾರ್ಮ್",
+    labelName: "ನಿಮ್ಮ ಹೆಸರು *", labelPhone: "ಫೋನ್ ಸಂಖ್ಯೆ *", labelCity: "ನಗರ / ಜಿಲ್ಲೆ *", labelNeed: "ನನಗೆ ಬೇಕು", labelBudget: "ಬಜೆಟ್ ವ್ಯಾಪ್ತಿ", labelMsg: "ಬೇರೆ ಏನಾದರೂ?",
+    submitBtn: "ವಿಚಾರಣೆ ಕಳುಹಿಸಿ — 2 ಗಂಟೆಯಲ್ಲಿ ಕರೆ",
+    footerDesc: "ಕರ್ನಾಟಕದ ಪ್ರಮುಖ ವಾಣಿಜ್ಯ ವಾಹನ ನಿರ್ಮಾಣ ಘಟಕ. ಆಟೋದಿಂದ ಲಾರಿ, SS 304 ಕಿಚನ್, 15+ ವರ್ಷ, 10,000+ ಗ್ರಾಹಕರು.",
+    footerNavTitle: "ನ್ಯಾವಿಗೇಟ್", footerHome: "ಮುಖಪುಟ", footerVehicles: "ವಾಹನಗಳು", footerWhy: "ಏಕೆ ನಾವು", footerProcess: "ಪ್ರಕ್ರಿಯೆ", footerReviews: "ಅಭಿಪ್ರಾಯ", footerContact: "ಉಲ್ಲೇಖ ಪಡೆಯಿರಿ",
+    footerContactTitle: "ಸಂಪರ್ಕಿಸಿ", footerSupport: "ಕನ್ನಡ · ಹಿಂದಿ · ಇಂಗ್ಲಿಷ್ ಸಹಾಯ", footerTagline: "ಕರ್ನಾಟಕದ #1 ಫುಡ್ ಟ್ರಕ್ ನಿರ್ಮಾಪಕ · 10,000+ ವಾಹನ",
+    waLabel: "ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡಿ!"
+  }
+};
 
-async function postForm(formId, endpoint, successMsg) {
-  const form = document.getElementById(formId);
-  if (!form) return;  
-  form.addEventListener("submit", async e => {
-    e.preventDefault();
-    const data = new FormData(form);
-    const res = await fetch(BASE + endpoint, {
-      method: "POST",
-      body: data
-    });
-    const json = await res.json();
-    alert(json.result.message|| sucessMsg);
-    form.reset();
-  });
+let lang = 'en';
+
+// Smooth number counter with easing
+function animateValue(el, start, end, duration, format = 'number') {
+  const startTime = performance.now();
+  const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+  
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutQuart(progress);
+    const current = Math.floor(start + (end - start) * easedProgress);
+    
+    if (format === 'k' && current >= 1000) {
+      el.textContent = Math.floor(current / 1000) + 'K';
+    } else {
+      el.textContent = current.toLocaleString('en-IN');
+    }
+    
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      if (format === 'k') {
+        el.textContent = Math.floor(end / 1000) + 'K';
+      } else {
+        el.textContent = end.toLocaleString('en-IN');
+      }
+    }
+  }
+  requestAnimationFrame(update);
 }
 
-// Attach form handlers
-postForm("get-started-form", "/submit-lead", "Thanks! We'll contact you shortly.");
-postForm("trial-form", "/submit-trial", "Trial request received. We'll get back soon.");
+// Stats animation observer
+let statsAnimated = false;
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !statsAnimated) {
+      statsAnimated = true;
+      animateValue(document.getElementById('stat1'), 0, 15, 2000);
+      animateValue(document.getElementById('stat2'), 0, 10000, 2500, 'k');
+      animateValue(document.getElementById('stat3'), 0, 10000, 2500, 'k');
+      animateValue(document.getElementById('stat4'), 0, 30, 2000);
+    }
+  });
+}, { threshold: 0.4 });
+
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) statsObserver.observe(heroStats);
+
+// Update language
+function updateLang() {
+  const t = T[lang];
+  const ids = Object.keys(t);
+  
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (['heroTitle', 'heroSub', 'vehSecTitle', 'whySecTitle', 'procSecTitle', 'reviewsSecTitle', 'leadTitle'].includes(id)) {
+        el.innerHTML = t[id];
+      } else if (id.startsWith('proof') || id.startsWith('perk')) {
+        const span = el.querySelector('span');
+        if (span) span.textContent = t[id];
+      } else if (id === 'heroQuoteBtn') {
+        el.innerHTML = '<i class="fas fa-file-alt"></i> ' + t[id];
+      } else if (id === 'heroWhatsappBtn') {
+        el.innerHTML = '<i class="fab fa-whatsapp"></i> ' + t[id];
+      } else if (id === 'whyQuoteBtn') {
+        el.innerHTML = '<i class="fas fa-file-alt"></i> ' + t[id];
+      } else if (id === 'whyWhatsappBtn') {
+        el.innerHTML = '<i class="fab fa-whatsapp" style="color:#25D366"></i> ' + t[id];
+      } else if (id === 'submitBtn') {
+        el.innerHTML = '<i class="fas fa-paper-plane"></i> ' + t[id];
+      } else {
+        el.textContent = t[id];
+      }
+    }
+  });
+  
+  // Toggle states
+  const isKn = lang === 'kn';
+  document.getElementById('knBanner').classList.toggle('show', isKn);
+  document.getElementById('langToggle').classList.toggle('active', isKn);
+  document.getElementById('mobLangToggle').classList.toggle('active', isKn);
+  document.getElementById('langEn').classList.toggle('active', !isKn);
+  document.getElementById('langKn').classList.toggle('active', isKn);
+  document.getElementById('mobLangEn').classList.toggle('active', !isKn);
+  document.getElementById('mobLangKn').classList.toggle('active', isKn);
+  document.documentElement.lang = isKn ? 'kn' : 'en';
+}
+
+function toggleLang() {
+  lang = lang === 'en' ? 'kn' : 'en';
+  updateLang();
+}
+
+// Event listeners for language toggles
+document.getElementById('langToggle').addEventListener('click', toggleLang);
+document.getElementById('langToggle').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLang(); }});
+document.getElementById('mobLangToggle').addEventListener('click', toggleLang);
+
+// Mobile menu
+function toggleMenu() { document.getElementById('mobMenu').classList.toggle('open'); }
+function closeMenu() { document.getElementById('mobMenu').classList.remove('open'); }
+
+// Review carousel
+(function() {
+  const track = document.getElementById('revTrack');
+  const dots = document.getElementById('revDots');
+  const cards = track.querySelectorAll('.rev-card');
+  if (!cards.length) return;
+  
+  const getPerView = () => window.innerWidth < 600 ? 1 : window.innerWidth < 900 ? 2 : 3;
+  let current = 0;
+  let autoSlide;
+  
+  function getTotal() { return Math.ceil(cards.length / getPerView()); }
+  
+  function buildDots() {
+    dots.innerHTML = '';
+    for (let i = 0; i < getTotal(); i++) {
+      const d = document.createElement('div');
+      d.className = 'rev-dot' + (i === current ? ' active' : '');
+      d.addEventListener('click', () => goTo(i));
+      dots.appendChild(d);
+    }
+  }
+  
+  function goTo(idx) {
+    current = idx;
+    const cardWidth = cards[0].offsetWidth + 20;
+    track.style.transform = `translateX(-${current * getPerView() * cardWidth}px)`;
+    dots.querySelectorAll('.rev-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+  
+  function startAuto() { autoSlide = setInterval(() => goTo((current + 1) % getTotal()), 5000); }
+  function stopAuto() { clearInterval(autoSlide); }
+  
+  document.getElementById('revPrev').addEventListener('click', () => { stopAuto(); goTo((current - 1 + getTotal()) % getTotal()); startAuto(); });
+  document.getElementById('revNext').addEventListener('click', () => { stopAuto(); goTo((current + 1) % getTotal()); startAuto(); });
+  
+  buildDots();
+  startAuto();
+  
+  window.addEventListener('resize', () => { current = 0; buildDots(); goTo(0); });
+})();
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.veh-card, .why-box, .proc-step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+  revealObserver.observe(el);
+});
+
+// Form submission
+document.getElementById('leadForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('fname').value.trim();
+  const phone = document.getElementById('fphone').value.trim();
+  const city = document.getElementById('fcity').value.trim();
+  const msg = document.getElementById('formMsg');
+  
+  if (!name || !phone || !city) {
+    msg.innerHTML = '<span style="color:#b45309">Please fill Name, Phone & City.</span>';
+    return;
+  }
+  
+  const thankYou = lang === 'kn' 
+    ? `✅ ಧನ್ಯವಾದ, ${name}! 2 ಗಂಟೆಯಲ್ಲಿ ನಮ್ಮ ತಂಡ ಕರೆ ಮಾಡುತ್ತದೆ.`
+    : `✅ Thank you, ${name}! Our team will call within 2 hours.`;
+  msg.innerHTML = `<span style="color:var(--green)">${thankYou}</span>`;
+  
+  const need = document.getElementById('fneed').value;
+  const budget = document.getElementById('fbudget').value;
+  const extra = document.getElementById('fmsg').value;
+  const waText = encodeURIComponent(`New Enquiry!\nName: ${name}\nPhone: ${phone}\nCity: ${city}\nNeed: ${need || '-'}\nBudget: ${budget || '-'}\nMessage: ${extra || '-'}`);
+  
+  this.reset();
+  setTimeout(() => msg.innerHTML = '', 6000);
+  setTimeout(() => window.open('[wa.me](https://wa.me/918214009876?text=)' + waText, '_blank'), 800);
+});
+
+// Initialize
+updateLang();
 </script>
 </body>
 </html>
