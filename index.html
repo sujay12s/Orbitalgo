@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>New Luck Refurbished – Mysore's #1 Food Truck Fabricator</title>
 <meta name="description" content="New Luck Refurbished – Mysore's leading commercial vehicle fabrication unit. Auto to lorry, SS steel, ready-made & custom builds. 15+ years, 10,000+ happy customers across Karnataka.">
-<link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)">
-<link rel="preconnect" href="[fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-<link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;600;700&display=swap)" rel="stylesheet">
-<link rel="stylesheet" href="[cdnjs.cloudflare.com](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--orange:#E8620A;--orange-dark:#C0500A;--orange-light:#FFF0E8;--black:#111111;--gray:#4B4B4B;--gray-light:#F5F5F5;--border:#E5E5E5;--white:#FFFFFF;--green:#16A34A;--transition-smooth:cubic-bezier(0.4,0,0.2,1)}
@@ -19,7 +19,7 @@ body{font-family:'Inter','Noto Sans Kannada',sans-serif;color:var(--black);backg
 nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);background:rgba(255,255,255,0.95)}
 .nav-inner{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-img{width:40px;height:40px;object-fit:contain;border-radius:10px}
+.logo-img{width:40px;height:40px;object-fit:cover;border-radius:10px;background:var(--orange-light);}
 .logo-text{font-size:1rem;font-weight:700;color:var(--black);line-height:1.2}
 .logo-sub{font-size:0.65rem;color:var(--orange);font-weight:600;letter-spacing:0.08em;text-transform:uppercase}
 .nav-links{display:flex;gap:6px;list-style:none}
@@ -38,7 +38,8 @@ nav{background:var(--white);border-bottom:1px solid var(--border);position:stick
 .toggle-knob{width:16px;height:16px;background:var(--orange);border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .3s var(--transition-smooth);box-shadow:0 2px 4px rgba(0,0,0,0.2)}
 .toggle-track.active .toggle-knob{transform:translateX(20px)}
 
-.hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--black);padding:8px}
+.hamburger{display:none;background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--orange);padding:8px;width:44px;height:44px;align-items:center;justify-content:center;border-radius:8px;transition:background 0.2s}
+.hamburger:hover{background:var(--orange-light);}
 .mob-menu{display:none;flex-direction:column;background:white;border-bottom:1px solid var(--border);padding:16px 20px;gap:4px;animation:slideDown .3s var(--transition-smooth)}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 .mob-menu.open{display:flex}
@@ -176,7 +177,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
 .socials{display:flex;gap:12px}
 .socials a{width:36px;height:36px;border-radius:50%;border:1.5px solid #222;display:flex;align-items:center;justify-content:center;color:#555;font-size:0.85rem;text-decoration:none;transition:all .2s var(--transition-smooth)}
 .socials a:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
-.footer-logo-img{width:56px;height:56px;object-fit:contain;border-radius:14px;margin-bottom:14px;background:#151515;padding:8px}
+.footer-logo-img{width:56px;height:56px;object-fit:cover;border-radius:14px;margin-bottom:14px;background:#151515;padding:4px;}
 
 /* WhatsApp Float */
 .wa-float{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);color:white;font-size:1.5rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,0.5);z-index:999;transition:all .3s var(--transition-smooth)}
@@ -193,7 +194,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
 }
 @media(max-width:768px){
   .nav-links,.nav-cta,.lang-switch{display:none}
-  .hamburger{display:flex;align-items:center}
+  .hamburger{display:flex !important;}
   .hero-stats{flex-wrap:wrap}
   .hstat{min-width:50%;border-bottom:1px solid rgba(255,255,255,0.06)}
   .hstat:nth-child(2){border-right:none}
@@ -221,7 +222,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
 <nav>
   <div class="nav-inner">
     <a href="#" class="logo">
-      <img src="logo.jpg">
+      <img src="logo.jpg" alt="New Luck Logo" class="logo-img">
       <div><div class="logo-text">New Luck Refurbished</div><div class="logo-sub">Mysore, Karnataka</div></div>
     </a>
     <ul class="nav-links">
@@ -241,7 +242,9 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
         <span id="langKn">ಕನ್ನಡ</span>
       </div>
       <a href="#contact" class="nav-cta" id="navCta">Get Free Quote</a>
-      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </div>
   <div class="mob-menu" id="mobMenu">
@@ -275,7 +278,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
   </p>
   <div class="hero-btns">
     <a href="#contact" class="btn-orange" id="heroQuoteBtn"><i class="fas fa-file-alt"></i> Get a Free Quote</a>
-    <a href="[wa.me](https://wa.me/918214009876?text=Hello!%20I%20want%20to%20know%20more%20about%20food%20truck%20fabrication)" class="btn-outline-white" target="_blank" id="heroWhatsappBtn"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+    <a href="https://wa.me/918214009876?text=Hello!%20I%20want%20to%20know%20more%20about%20food%20truck%20fabrication" class="btn-outline-white" target="_blank" id="heroWhatsappBtn"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
   </div>
   <div class="hero-stats">
     <div class="hstat"><div class="hstat-n"><span id="stat1">0</span><span class="plus">+</span></div><div class="hstat-l" id="statLabel1">YEARS EXPERIENCE</div></div>
@@ -294,12 +297,18 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
       <p class="sec-sub" id="vehSecSub">From a single auto-rickshaw snack cart to a full lorry restaurant on wheels — we do it all. Ready-made stock available, full custom builds on order.</p>
     </div>
     <div class="veh-grid">
-      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🛺%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3EAuto Rickshaw%3C/text%3E%3C/svg%3E" alt="Auto"></div><h3 id="vehTitle1">Auto Rickshaw</h3><p id="vehDesc1">Perfect for chaat, tea, snacks. Low investment, easy to park anywhere in the city.</p><span class="veh-tag" id="vehTag1">Best for starters</span></div>
-      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚚%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ETata Ace%3C/text%3E%3C/svg%3E" alt="Tata Ace"></div><h3 id="vehTitle2">Mini Truck (Tata Ace)</h3><p id="vehDesc2">Solo entrepreneurs & small menus. Low maintenance, perfect for city traffic and college areas.</p><span class="veh-tag" id="vehTag2">Most affordable</span></div>
-      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚛%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3EMid Truck%3C/text%3E%3C/svg%3E" alt="Mid Truck"></div><h3 id="vehTitle3">Mid-Size Truck</h3><p id="vehDesc3">Mahindra, Force Urban — 2-3 cooking stations, ideal for tiffin, biryani, burgers.</p><span class="veh-tag" id="vehTag3">Most popular</span></div>
-      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚚%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ELarge Lorry%3C/text%3E%3C/svg%3E" alt="Lorry"></div><h3 id="vehTitle4">Large Lorry</h3><p id="vehDesc4">Ashok Leyland, Eicher — full restaurant setup, high volume, ideal for events & wedding catering.</p><span class="veh-tag" id="vehTag4">Max ROI</span></div>
-      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🏕️%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ETrailer%3C/text%3E%3C/svg%3E" alt="Trailer"></div><h3 id="vehTitle5">Trailer / Caravan</h3><p id="vehDesc5">Stationary or tow-able trailer setups for permanent spots, malls, IT parks, and food courts.</p><span class="veh-tag" id="vehTag5">Premium look</span></div>
-      <div class="veh-card" style="border:2px dashed var(--orange);background:var(--orange-light)"><div class="veh-img" style="background:linear-gradient(135deg,#FFF0E8 0%,#FFE4D4 100%);border-color:rgba(232,98,10,0.2)"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23FFF0E8'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🤔%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23E8620A'%3ENeed Help?%3C/text%3E%3C/svg%3E" alt="Help"></div><h3 id="vehTitle6">Not sure which?</h3><p id="vehDesc6">Tell us your budget, cuisine & city. We'll recommend the right vehicle and guide you from zero.</p><a href="#contact" class="veh-tag" id="vehLink6" style="text-decoration:none;display:inline-block;margin-top:14px;background:var(--orange);color:white">Ask us →</a></div>
+      <!-- Auto Rickshaw -->
+      <div class="veh-card"><div class="veh-img"><img src="auto.jpg" alt="Auto Rickshaw food truck"></div><h3 id="vehTitle1">Auto Rickshaw</h3><p id="vehDesc1">Perfect for chaat, tea, snacks. Low investment, easy to park anywhere in the city.</p><span class="veh-tag" id="vehTag1">Best for starters</span></div>
+      <!-- Tata Ace (Mini Truck) -->
+      <div class="veh-card"><div class="veh-img"><img src="tatace.jpg" alt="Tata Ace food truck"></div><h3 id="vehTitle2">Mini Truck (Tata Ace)</h3><p id="vehDesc2">Solo entrepreneurs & small menus. Low maintenance, perfect for city traffic and college areas.</p><span class="veh-tag" id="vehTag2">Most affordable</span></div>
+      <!-- Mid-Size Truck -->
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🚛%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3EMid Truck%3C/text%3E%3C/svg%3E" alt="Mid Truck"></div><h3 id="vehTitle3">Mid-Size Truck</h3><p id="vehDesc3">Mahindra, Force Urban — 2-3 cooking stations, ideal for tiffin, biryani, burgers.</p><span class="veh-tag" id="vehTag3">Most popular</span></div>
+      <!-- Large Lorry -->
+      <div class="veh-card"><div class="veh-img"><img src="lorry.jpg" alt="Large Lorry food truck"></div><h3 id="vehTitle4">Large Lorry</h3><p id="vehDesc4">Ashok Leyland, Eicher — full restaurant setup, high volume, ideal for events & wedding catering.</p><span class="veh-tag" id="vehTag4">Max ROI</span></div>
+      <!-- Trailer -->
+      <div class="veh-card"><div class="veh-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23f0f0f0'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🏕️%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23888'%3ETrailer%3C/text%3E%3C/svg%3E" alt="Trailer"></div><h3 id="vehTitle5">Trailer / Caravan</h3><p id="vehDesc5">Stationary or tow-able trailer setups for permanent spots, malls, IT parks, and food courts.</p><span class="veh-tag" id="vehTag5">Premium look</span></div>
+      <!-- Not sure -->
+      <div class="veh-card" style="border:2px dashed var(--orange);background:var(--orange-light)"><div class="veh-img" style="background:linear-gradient(135deg,#FFF0E8 0%,#FFE4D4 100%);border-color:rgba(232,98,10,0.2)"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 180'%3E%3Crect width='300' height='180' fill='%23FFF0E8'/%3E%3Ctext x='150' y='95' font-size='40' text-anchor='middle'%3E🤔%3C/text%3E%3Ctext x='150' y='130' font-size='12' text-anchor='middle' fill='%23E8620A'%3ENeed Help?%3C/text%3E%3C/svg%3E" alt="Help"></div><h3 id="vehTitle6">Not sure which?</h3><p id="vehDesc6">Tell us your budget, cuisine & city. We'll recommend the right vehicle and guide you from zero.</p><a href="#contact" class="veh-tag" id="vehLink6" style="text-decoration:none;display:inline-block;margin-top:14px;background:var(--orange);color:white">Ask us →</a></div>
     </div>
   </div>
 </section>
@@ -322,7 +331,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
         </div>
         <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
           <a href="#contact" class="btn-orange" style="font-size:0.85rem;padding:12px 22px" id="whyQuoteBtn"><i class="fas fa-file-alt"></i> Get Free Quote</a>
-          <a href="[wa.me](https://wa.me/918214009876)" class="btn-outline-white" style="font-size:0.85rem;padding:11px 20px;border-color:#ddd;color:var(--black)" target="_blank" id="whyWhatsappBtn"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp</a>
+          <a href="https://wa.me/918214009876" class="btn-outline-white" style="font-size:0.85rem;padding:11px 20px;border-color:#ddd;color:var(--black)" target="_blank" id="whyWhatsappBtn"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp</a>
         </div>
       </div>
       <div class="why-right">
@@ -345,10 +354,10 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
       <h2 class="sec-title" style="color:white" id="procSecTitle">Your Truck, <span>Step by Step</span></h2>
     </div>
     <div class="proc-grid">
-      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E📞%3C/text%3E%3C/svg%3E" alt="Call"></div><div class="proc-num">1</div><h4 id="procStep1Title">Tell Us Your Needs</h4><p id="procStep1Desc">Budget, cuisine, vehicle preference, city. Call, WhatsApp, or fill the form — we respond within 2 hours.</p></div>
-      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🚚%3C/text%3E%3C/svg%3E" alt="Vehicle"></div><div class="proc-num">2</div><h4 id="procStep2Title">Vehicle Selection</h4><p id="procStep2Desc">We recommend the right base vehicle. Don't have one? We help you source a quality used vehicle too.</p></div>
-      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🔧%3C/text%3E%3C/svg%3E" alt="Fabrication"></div><div class="proc-num">3</div><h4 id="procStep3Title">Custom Fabrication</h4><p id="procStep3Desc">Our Mysore unit strips and rebuilds with SS 304 kitchen, exhaust, electrical, insulation — everything.</p></div>
-      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🎉%3C/text%3E%3C/svg%3E" alt="Delivery"></div><div class="proc-num">4</div><h4 id="procStep4Title">Final Finish & Delivery</h4><p id="procStep4Desc">Wrap, branding, equipment fitted. Then safely delivered to your city anywhere in Karnataka.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E📞%3C/text%3E%3C/svg%3E" alt="Call"></div><div class="proc-num">1</div><h4 id="procStep1Title">Tell Us Your Needs</h4><p id="procStep1Desc">Budget, cuisine, vehicle preference, city. Call, WhatsApp, or fill the form — we respond within 2 hours.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🚚%3C/text%3E%3C/svg%3E" alt="Vehicle"></div><div class="proc-num">2</div><h4 id="procStep2Title">Vehicle Selection</h4><p id="procStep2Desc">We recommend the right base vehicle. Don't have one? We help you source a quality used vehicle too.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🔧%3C/text%3E%3C/svg%3E" alt="Fabrication"></div><div class="proc-num">3</div><h4 id="procStep3Title">Custom Fabrication</h4><p id="procStep3Desc">Our Mysore unit strips and rebuilds with SS 304 kitchen, exhaust, electrical, insulation — everything.</p></div>
+      <div class="proc-step"><div class="proc-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='%23E8620A18'/%3E%3Ctext x='40' y='52' font-size='32' text-anchor='middle'%3E🎉%3C/text%3E%3C/svg%3E" alt="Delivery"></div><div class="proc-num">4</div><h4 id="procStep4Title">Final Finish & Delivery</h4><p id="procStep4Desc">Wrap, branding, equipment fitted. Then safely delivered to your city anywhere in Karnataka.</p></div>
     </div>
   </div>
 </section>
@@ -395,7 +404,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
         </div>
         <div style="margin-top:32px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
           <a href="tel:+918214009876" style="color:white;text-decoration:none;font-size:0.95rem;font-weight:600;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt"></i> +91 821 400 9876</a>
-          <a href="[wa.me](https://wa.me/918214009876)" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:8px;" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://wa.me/918214009876" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:8px;" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
         </div>
       </div>
       <div class="lead-form">
@@ -422,7 +431,7 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
   <div class="footer-inner">
     <div class="footer-grid">
       <div>
-        <img src="data:image/svg+xml,%3Csvg xmlns='[w3.org](http://www.w3.org/2000/svg)' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23E8620A' rx='20'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E🍀%3C/text%3E%3C/svg%3E" alt="Footer Logo" class="footer-logo-img">
+        <img src="logo.jpg" alt="Footer Logo" class="footer-logo-img">
         <div class="footer-brand-name">New Luck Refurbished</div>
         <div class="footer-brand-sub">Mysore, Karnataka · Est. 2011</div>
         <div class="footer-brand" id="footerDesc">Karnataka's leading commercial vehicle fabrication unit. Auto to lorry, SS 304 steel kitchens, ready-made & custom builds. 15+ years, 10,000+ happy customers.</div>
@@ -430,17 +439,17 @@ footer{background:#0a0a0a;padding:48px 20px 24px}
           <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
           <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
           <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          <a href="[wa.me](https://wa.me/918214009876)" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://wa.me/918214009876" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
       <div class="footer-col"><h5 id="footerNavTitle">Navigate</h5><a href="#home" id="footerHome">Home</a><a href="#vehicles" id="footerVehicles">Our Vehicles</a><a href="#why" id="footerWhy">Why Us</a><a href="#process" id="footerProcess">How It Works</a><a href="#reviews" id="footerReviews">Customer Reviews</a><a href="#contact" id="footerContact">Get a Quote</a></div>
-      <div class="footer-col"><h5 id="footerContactTitle">Contact Us</h5><a href="tel:+918214009876"><i class="fas fa-phone" style="margin-right:8px;color:var(--orange)"></i> +91 821 400 9876</a><a href="[wa.me](https://wa.me/918214009876)" target="_blank"><i class="fab fa-whatsapp" style="margin-right:8px;color:#25D366"></i> WhatsApp</a><a href="mailto:hello@newluckrefurbished.in"><i class="fas fa-envelope" style="margin-right:8px;color:var(--orange)"></i> hello@newluckrefurbished.in</a><a href="#"><i class="fas fa-map-pin" style="margin-right:8px;color:var(--orange)"></i> Hebbal, Mysore – 570016</a><a href="#"><i class="fas fa-clock" style="margin-right:8px;color:var(--orange)"></i> Mon–Sat: 10 AM – 7 PM</a><div style="margin-top:14px;font-size:0.75rem;color:#555" id="footerSupport">Kannada · Hindi · English support</div></div>
+      <div class="footer-col"><h5 id="footerContactTitle">Contact Us</h5><a href="tel:+918214009876"><i class="fas fa-phone" style="margin-right:8px;color:var(--orange)"></i> +91 821 400 9876</a><a href="https://wa.me/918214009876" target="_blank"><i class="fab fa-whatsapp" style="margin-right:8px;color:#25D366"></i> WhatsApp</a><a href="mailto:hello@newluckrefurbished.in"><i class="fas fa-envelope" style="margin-right:8px;color:var(--orange)"></i> hello@newluckrefurbished.in</a><a href="#"><i class="fas fa-map-pin" style="margin-right:8px;color:var(--orange)"></i> Hebbal, Mysore – 570016</a><a href="#"><i class="fas fa-clock" style="margin-right:8px;color:var(--orange)"></i> Mon–Sat: 10 AM – 7 PM</a><div style="margin-top:14px;font-size:0.75rem;color:#555" id="footerSupport">Kannada · Hindi · English support</div></div>
     </div>
     <div class="footer-bottom"><span>© 2026 New Luck Refurbished. All rights reserved.</span><span id="footerTagline">Karnataka's #1 Food Truck Fabricator · 10,000+ vehicles built</span></div>
   </div>
 </footer>
 
-<a href="[wa.me](https://wa.me/918214009876?text=ನಮಸ್ಕಾರ!%20ನನಗೆ%20ಫುಡ್%20ಟ್ರಕ್%20ಬಗ್ಗೆ%20ಮಾಹಿತಿ%20ಬೇಕು)" class="wa-float" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/918214009876?text=ನಮಸ್ಕಾರ!%20ನನಗೆ%20ಫುಡ್%20ಟ್ರಕ್%20ಬಗ್ಗೆ%20ಮಾಹಿತಿ%20ಬೇಕು" class="wa-float" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 <div class="wa-float-label" id="waLabel">Chat with us in Kannada!</div>
 
 <script>
@@ -734,7 +743,7 @@ document.getElementById('leadForm').addEventListener('submit', function(e) {
   
   this.reset();
   setTimeout(() => msg.innerHTML = '', 6000);
-  setTimeout(() => window.open('[wa.me](https://wa.me/918214009876?text=)' + waText, '_blank'), 800);
+  setTimeout(() => window.open('https://wa.me/918214009876?text=' + waText, '_blank'), 800);
 });
 
 // Initialize
